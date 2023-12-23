@@ -11,6 +11,15 @@ public final class Player {
     private int[] order;
     private AudioFiles currFile;
     private int currentObject;
+    private User currUser;
+
+    public User getCurrUser() {
+        return currUser;
+    }
+
+    public void setCurrUser(User currUser) {
+        this.currUser = currUser;
+    }
 
     public int getLasttimestamp() {
         return lasttimestamp;

@@ -73,6 +73,161 @@ public class User implements Visitable {
 
     private LinkedList<PodcastInfo> podcastInfos = new LinkedList<PodcastInfo>();
 
+    class Wrapped {
+        static class ArtistListen {
+            private String artist;
+            private int listen;
+
+            public String getArtist() {
+                return artist;
+            }
+
+            public void setArtist(final String artist) {
+                this.artist = artist;
+            }
+
+            public int getListen() {
+                return listen;
+            }
+
+            public void setListen(int listen) {
+                this.listen = listen;
+            }
+        }
+
+        static class SongListen {
+            private Song song;
+            private int listen;
+
+            public Song getSong() {
+                return song;
+            }
+
+            public void setSong(Song song) {
+                this.song = song;
+            }
+
+            public int getListen() {
+                return listen;
+            }
+
+            public void setListen(int listen) {
+                this.listen = listen;
+            }
+        }
+
+        static class GenreListen {
+            private String genre;
+            private int listen;
+
+            public String getGenre() {
+                return genre;
+            }
+
+            public void setGenre(String genre) {
+                this.genre = genre;
+            }
+
+            public int getListen() {
+                return listen;
+            }
+
+            public void setListen(int listen) {
+                this.listen = listen;
+            }
+        }
+
+        static class AlbumListen {
+            private Album album;
+            private int listen;
+
+            public Album getAlbum() {
+                return album;
+            }
+
+            public void setAlbum(Album album) {
+                this.album = album;
+            }
+
+            public int getListen() {
+                return listen;
+            }
+
+            public void setListen(int listen) {
+                this.listen = listen;
+            }
+        }
+
+        static class PodcastListen {
+            private Podcast podcast;
+            private int listen;
+
+            public Podcast getPodcast() {
+                return podcast;
+            }
+
+            public void setPodcast(Podcast podcast) {
+                this.podcast = podcast;
+            }
+
+            public int getListen() {
+                return listen;
+            }
+
+            public void setListen(int listen) {
+                this.listen = listen;
+            }
+        }
+
+        private LinkedList<ArtistListen> topArtist = new LinkedList<>();
+        private LinkedList<AlbumListen> topAlbum = new LinkedList<>();
+        private LinkedList<SongListen> topSong = new LinkedList<>();
+        private LinkedList<PodcastListen> topPodcast = new LinkedList<>();
+        private LinkedList<GenreListen> topGenre = new LinkedList<>();
+
+        public LinkedList<ArtistListen> getTopArtist() {
+            return topArtist;
+        }
+
+        public void setTopArtist(LinkedList<ArtistListen> topArtist) {
+            this.topArtist = topArtist;
+        }
+
+        public LinkedList<AlbumListen> getTopAlbum() {
+            return topAlbum;
+        }
+
+        public void setTopAlbum(LinkedList<AlbumListen> topAlbum) {
+            this.topAlbum = topAlbum;
+        }
+
+        public LinkedList<SongListen> getTopSong() {
+            return topSong;
+        }
+
+        public void setTopSong(LinkedList<SongListen> topSong) {
+            this.topSong = topSong;
+        }
+
+        public LinkedList<PodcastListen> getTopPodcast() {
+            return topPodcast;
+        }
+
+        public void setTopPodcast(LinkedList<PodcastListen> topPodcast) {
+            this.topPodcast = topPodcast;
+        }
+
+        public LinkedList<GenreListen> getTopGenre() {
+            return topGenre;
+        }
+
+        public void setTopGenre(LinkedList<GenreListen> topGenre) {
+            this.topGenre = topGenre;
+        }
+    }
+
+    private Wrapped wrapped = new Wrapped();
+
     public User(final UserInput user) {
         this.age = user.getAge();
         this.city = user.getCity();
@@ -80,6 +235,7 @@ public class User implements Visitable {
         this.currentPage = "HomePage";
         this.currUserrPage = this;
         player.setType("nothing");
+        player.setCurrUser(this);
     }
 
     public User(final Command command) {
@@ -89,6 +245,7 @@ public class User implements Visitable {
         this.city = command.getCity();
         this.currentPage = "HomePage";
         this.currUserrPage = this;
+        player.setCurrUser(this);
     }
 
     /**
@@ -1000,6 +1157,99 @@ public class User implements Visitable {
         return v.visit(currUserrPage, command);
     }
 
+    public void updateWrapped(String type, Object obj) {
+        boolean exists = false;
+        if (type.equals("song")) {
+            Song currSong = (Song) obj;
+            for (int i = 0; i < wrapped.getTopSong().size(); i++) {
+                Song wrsg = wrapped.getTopSong().get(i).getSong();
+                if (wrsg.getArtist().equals(currSong.getArtist()) && wrsg.getName().equals(currSong.getName())) {
+                    exists = true;
+                    int listens = wrapped.getTopSong().get(i).getListen();
+                    wrapped.getTopSong().get(i).setListen(listens + 1);
+                    break;
+                }
+            }
+            if (!exists) {
+                wrapped.getTopSong().addLast(new Wrapped.SongListen());
+                wrapped.getTopSong().getLast().setListen(1);
+                wrapped.getTopSong().getLast().setSong(currSong);
+            }
+            return;
+        }
+        if (type.equals("album")) {
+            Album currAlb = (Album) obj;
+            for (int i = 0; i < wrapped.getTopAlbum().size(); i++) {
+                Album wral = wrapped.getTopAlbum().get(i).getAlbum();
+                if (wral.getUsername().equals(currAlb.getUsername()) && wral.getName().equals(currAlb.getName())) {
+                    exists = true;
+                    int listens = wrapped.getTopAlbum().get(i).getListen();
+                    wrapped.getTopAlbum().get(i).setListen(listens + 1);
+                    break;
+                }
+            }
+            if (!exists) {
+                wrapped.getTopAlbum().addLast(new Wrapped.AlbumListen());
+                wrapped.getTopAlbum().getLast().setListen(1);
+                wrapped.getTopAlbum().getLast().setAlbum(currAlb);
+            }
+            return;
+        }
+        if (type.equals("podcast")) {
+            Podcast currPod = (Podcast) obj;
+            for (int i = 0; i < wrapped.getTopPodcast().size(); i++) {
+                Podcast wrpd = wrapped.getTopPodcast().get(i).getPodcast();
+                if (wrpd.getOwner().equals(currPod.getOwner()) && wrpd.getName().equals(currPod.getName())) {
+                    exists = true;
+                    int listens = wrapped.getTopPodcast().get(i).getListen();
+                    wrapped.getTopPodcast().get(i).setListen(listens + 1);
+                    break;
+                }
+            }
+            if (!exists) {
+                wrapped.getTopPodcast().addLast(new Wrapped.PodcastListen());
+                wrapped.getTopPodcast().getLast().setListen(1);
+                wrapped.getTopPodcast().getLast().setPodcast(currPod);
+            }
+            return;
+        }
+        if (type.equals("artist")) {
+            String currArt = (String) obj;
+            for (int i = 0; i < wrapped.getTopArtist().size(); i++) {
+                String wrat = wrapped.getTopArtist().get(i).getArtist();
+                if (wrat.equals(currArt)) {
+                    exists = true;
+                    int listens = wrapped.getTopArtist().get(i).getListen();
+                    wrapped.getTopArtist().get(i).setListen(listens + 1);
+                    break;
+                }
+            }
+            if (!exists) {
+                wrapped.getTopArtist().addLast(new Wrapped.ArtistListen());
+                wrapped.getTopArtist().getLast().setListen(1);
+                wrapped.getTopArtist().getLast().setArtist(currArt);
+            }
+            return;
+        }
+        if (type.equals("genre")) {
+            String currGen = (String) obj;
+            for (int i = 0; i < wrapped.getTopGenre().size(); i++) {
+                String wrgn = wrapped.getTopGenre().get(i).getGenre();
+                if (wrgn.equals(currGen)) {
+                    exists = true;
+                    int listens = wrapped.getTopGenre().get(i).getListen();
+                    wrapped.getTopGenre().get(i).setListen(listens + 1);
+                    break;
+                }
+            }
+            if (!exists) {
+                wrapped.getTopGenre().addLast(new Wrapped.GenreListen());
+                wrapped.getTopGenre().getLast().setListen(1);
+                wrapped.getTopGenre().getLast().setGenre(currGen);
+            }
+        }
+    }
+
     public final boolean isOffline() {
         return offline;
     }
@@ -1122,6 +1372,14 @@ public class User implements Visitable {
 
     public final void setCurrUserrPage(final User currUserrPage) {
         this.currUserrPage = currUserrPage;
+    }
+
+    public Wrapped getWrapped() {
+        return wrapped;
+    }
+
+    public void setWrapped(Wrapped wrapped) {
+        this.wrapped = wrapped;
     }
 }
 
