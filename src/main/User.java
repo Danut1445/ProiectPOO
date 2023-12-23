@@ -601,6 +601,9 @@ public class User implements Visitable {
             player.setType("song");
             player.setCurrFile((Song) selectedItem);
             player.setPause(false);
+            updateWrapped("song", player.getCurrFile());
+            updateWrapped("artist", ((Song) selectedItem).getArtist());
+            updateWrapped("genre", ((Song) selectedItem).getGenre());
         }
         if (lastsearch.equals("playlist")) {
             int aux = ((Playlist) selectedItem).getSongs().size();
@@ -609,6 +612,10 @@ public class User implements Visitable {
             player.setCurrFile(((Playlist) selectedItem).getSongs().get(0));
             player.setCurrentObject(0);
             player.setOrder(IntStream.range(0, aux).toArray());
+            Song currSong = ((Playlist) selectedItem).getSongs().get(0);
+            updateWrapped("song", currSong);
+            updateWrapped("artist", currSong.getArtist());
+            updateWrapped("genre", currSong.getGenre());
         }
         if (lastsearch.equals("podcast")) {
             PodcastInfo info = containsPodcast(((Podcast) selectedItem).getName());
@@ -625,6 +632,8 @@ public class User implements Visitable {
                 player.setCurrFile(aux);
                 player.setCurrentObject(info.getCurrepisode());
             }
+            Podcast currPod = (Podcast) selectedItem;
+            updateWrapped("podcast", currPod);
         }
         if (lastsearch.equals("album")) {
             int aux = ((Album) selectedItem).getSongs().size();
@@ -633,6 +642,10 @@ public class User implements Visitable {
             player.setCurrFile(((Album) selectedItem).getSongs().get(0));
             player.setCurrentObject(0);
             player.setOrder(IntStream.range(0, aux).toArray());
+            Song currSong = ((Album) selectedItem).getSongs().get(0);
+            updateWrapped("song", currSong);
+            updateWrapped("artist", currSong.getArtist());
+            updateWrapped("genre", currSong.getGenre());
         }
         player.setSource(selectedItem);
         player.setLasttimestamp(command.getTimestamp());
@@ -1248,6 +1261,10 @@ public class User implements Visitable {
                 wrapped.getTopGenre().getLast().setGenre(currGen);
             }
         }
+    }
+
+    public ResultWrapped printWrapped(final Command command) {
+
     }
 
     public final boolean isOffline() {

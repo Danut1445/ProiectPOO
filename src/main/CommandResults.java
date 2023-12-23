@@ -483,3 +483,9 @@ class ResultPodcast extends CommandResults {
         this.result = result;
     }
 }
+
+class ResultWrapped extends CommandResults {
+    ResultWrapped(final Command command, final User user) {
+        super(command);
+    }
+}
