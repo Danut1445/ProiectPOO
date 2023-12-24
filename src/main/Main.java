@@ -307,6 +307,11 @@ public final class Main {
             if (currComm.getCommand().equals("getTop5Artists")) {
                 results.addLast(userbase.getTop5Artist(currComm));
             }
+            if (currComm.getCommand().equals("wrapped")) {
+                if (currUser.getType() == 0) {
+                    results.addLast(currUser.printWrapped(currComm));
+                }
+            }
         }
 
         ObjectWriter objectWriter = objectMapper.writerWithDefaultPrettyPrinter();

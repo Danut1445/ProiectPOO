@@ -484,8 +484,87 @@ class ResultPodcast extends CommandResults {
     }
 }
 
-class ResultWrapped extends CommandResults {
-    ResultWrapped(final Command command, final User user) {
+class ResultWrappedUser extends CommandResults {
+    class Result {
+        private LinkedList<String> topArtists = new LinkedList<>();
+        private LinkedList<String> topGenres = new LinkedList<>();
+        private LinkedList<String> topSongs = new LinkedList<>();
+        private LinkedList<String> topAlbums = new LinkedList<>();
+        private LinkedList<String> topPodcast = new LinkedList<>();
+
+        public LinkedList<String> getTopArtists() {
+            return topArtists;
+        }
+
+        public void setTopArtists(LinkedList<String> topArtists) {
+            this.topArtists = topArtists;
+        }
+
+        public LinkedList<String> getTopGenres() {
+            return topGenres;
+        }
+
+        public void setTopGenres(LinkedList<String> topGenres) {
+            this.topGenres = topGenres;
+        }
+
+        public LinkedList<String> getTopSongs() {
+            return topSongs;
+        }
+
+        public void setTopSongs(LinkedList<String> topSongs) {
+            this.topSongs = topSongs;
+        }
+
+        public LinkedList<String> getTopAlbums() {
+            return topAlbums;
+        }
+
+        public void setTopAlbums(LinkedList<String> topAlbums) {
+            this.topAlbums = topAlbums;
+        }
+
+        public LinkedList<String> getTopPodcast() {
+            return topPodcast;
+        }
+
+        public void setTopPodcast(LinkedList<String> topPodcast) {
+            this.topPodcast = topPodcast;
+        }
+    }
+
+    Result result = new Result();
+
+    ResultWrappedUser(final Command command, final User user) {
         super(command);
+        final int basecase = 5;
+        LinkedList<User.Wrapped.SongListen> songs = user.getWrapped().getTopSong();
+        for (int i = 0; i < basecase && i < songs.size(); i++) {
+            result.getTopSongs().addLast((songs.get(i).getSong().getName() + ": " + songs.get(i).getListen()));
+        }
+        LinkedList<User.Wrapped.ArtistListen> artist = user.getWrapped().getTopArtist();
+        for (int i = 0; i < basecase && i < artist.size(); i++) {
+            result.getTopArtists().addLast(artist.get(i).getArtist() + ": " + artist.get(i).getListen());
+        }
+        LinkedList<User.Wrapped.PodcastListen> podcast = user.getWrapped().getTopPodcast();
+        for (int i = 0; i < basecase && i < podcast.size(); i++) {
+            result.getTopPodcast().addLast(podcast.get(i).getPodcast().getName() + ": " + podcast.get(i).getListen());
+        }
+        LinkedList<User.Wrapped.GenreListen> genre = user.getWrapped().getTopGenre();
+        for (int i = 0; i < basecase && i < genre.size(); i++) {
+            result.getTopGenres().addLast(genre.get(i).getGenre() + ": " + genre.get(i).getListen());
+        }
+        LinkedList<User.Wrapped.AlbumListen> album = user.getWrapped().getTopAlbum();
+        for (int i = 0; i < basecase && i < album.size(); i++) {
+            result.getTopAlbums().addLast(album.get(i).getAlbum() + ": " + album.get(i).getListen());
+        }
+    }
+
+    public Result getResult() {
+        return result;
+    }
+
+    public void setResult(Result result) {
+        this.result = result;
     }
 }

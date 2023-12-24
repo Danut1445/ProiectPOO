@@ -74,7 +74,7 @@ public class User implements Visitable {
     private LinkedList<PodcastInfo> podcastInfos = new LinkedList<PodcastInfo>();
 
     class Wrapped {
-        static class ArtistListen {
+        static class ArtistListen implements Comparable<ArtistListen>{
             private String artist;
             private int listen;
 
@@ -93,9 +93,18 @@ public class User implements Visitable {
             public void setListen(int listen) {
                 this.listen = listen;
             }
+
+            @Override
+            public int compareTo(ArtistListen o) {
+                if (this.listen == o.getListen()) {
+                    return this.artist.compareTo(o.getArtist());
+                } else {
+                    return o.listen - this.listen;
+                }
+            }
         }
 
-        static class SongListen {
+        static class SongListen implements Comparable<SongListen>{
             private Song song;
             private int listen;
 
@@ -114,9 +123,18 @@ public class User implements Visitable {
             public void setListen(int listen) {
                 this.listen = listen;
             }
+
+            @Override
+            public int compareTo(SongListen o) {
+                if (this.listen == o.getListen()) {
+                    return this.song.getName().compareTo(o.getSong().getName());
+                } else {
+                    return o.listen - this.listen;
+                }
+            }
         }
 
-        static class GenreListen {
+        static class GenreListen implements Comparable<GenreListen>{
             private String genre;
             private int listen;
 
@@ -135,17 +153,26 @@ public class User implements Visitable {
             public void setListen(int listen) {
                 this.listen = listen;
             }
+
+            @Override
+            public int compareTo(GenreListen o) {
+                if (this.listen == o.getListen()) {
+                    return this.genre.compareTo(o.getGenre());
+                } else {
+                    return o.listen - this.listen;
+                }
+            }
         }
 
-        static class AlbumListen {
-            private Album album;
+        static class AlbumListen implements Comparable<AlbumListen>{
+            private String album;
             private int listen;
 
-            public Album getAlbum() {
+            public String getAlbum() {
                 return album;
             }
 
-            public void setAlbum(Album album) {
+            public void setAlbum(String album) {
                 this.album = album;
             }
 
@@ -156,9 +183,18 @@ public class User implements Visitable {
             public void setListen(int listen) {
                 this.listen = listen;
             }
+
+            @Override
+            public int compareTo(AlbumListen o) {
+                if (this.listen == o.getListen()) {
+                    return this.album.compareTo(o.getAlbum());
+                } else {
+                    return o.listen - this.listen;
+                }
+            }
         }
 
-        static class PodcastListen {
+        static class PodcastListen implements Comparable<PodcastListen>{
             private Podcast podcast;
             private int listen;
 
@@ -176,6 +212,15 @@ public class User implements Visitable {
 
             public void setListen(int listen) {
                 this.listen = listen;
+            }
+
+            @Override
+            public int compareTo(PodcastListen o) {
+                if (this.listen == o.getListen()) {
+                    return this.podcast.getName().compareTo(o.getPodcast().getName());
+                } else {
+                    return o.listen - this.listen;
+                }
             }
         }
 
@@ -299,10 +344,10 @@ public class User implements Visitable {
             result.setMessage(username + " is offline.");
             return result;
         }
+        player.status(command);
         JsonNode filters = command.getFilters();
         LinkedList<String> tags = new LinkedList<String>();
         if (player.getType().equals("podcast")) {
-            player.status(command);
             PodcastInfo info = containsPodcast(((Podcast) player.getSource()).getName());
             if (info != null) {
                 info.setCurrepisode(player.getCurrentObject());
@@ -604,6 +649,7 @@ public class User implements Visitable {
             updateWrapped("song", player.getCurrFile());
             updateWrapped("artist", ((Song) selectedItem).getArtist());
             updateWrapped("genre", ((Song) selectedItem).getGenre());
+            updateWrapped("album", ((Song) selectedItem).getAlbum());
         }
         if (lastsearch.equals("playlist")) {
             int aux = ((Playlist) selectedItem).getSongs().size();
@@ -616,6 +662,7 @@ public class User implements Visitable {
             updateWrapped("song", currSong);
             updateWrapped("artist", currSong.getArtist());
             updateWrapped("genre", currSong.getGenre());
+            updateWrapped("album", currSong.getAlbum());
         }
         if (lastsearch.equals("podcast")) {
             PodcastInfo info = containsPodcast(((Podcast) selectedItem).getName());
@@ -646,6 +693,7 @@ public class User implements Visitable {
             updateWrapped("song", currSong);
             updateWrapped("artist", currSong.getArtist());
             updateWrapped("genre", currSong.getGenre());
+            updateWrapped("album", currSong.getAlbum());
         }
         player.setSource(selectedItem);
         player.setLasttimestamp(command.getTimestamp());
@@ -1191,10 +1239,10 @@ public class User implements Visitable {
             return;
         }
         if (type.equals("album")) {
-            Album currAlb = (Album) obj;
+            String currAlb = (String) obj;
             for (int i = 0; i < wrapped.getTopAlbum().size(); i++) {
-                Album wral = wrapped.getTopAlbum().get(i).getAlbum();
-                if (wral.getUsername().equals(currAlb.getUsername()) && wral.getName().equals(currAlb.getName())) {
+                String wral = wrapped.getTopAlbum().get(i).getAlbum();
+                if (wral.equals(currAlb)) {
                     exists = true;
                     int listens = wrapped.getTopAlbum().get(i).getListen();
                     wrapped.getTopAlbum().get(i).setListen(listens + 1);
@@ -1263,8 +1311,15 @@ public class User implements Visitable {
         }
     }
 
-    public ResultWrapped printWrapped(final Command command) {
-
+    public ResultWrappedUser printWrapped(final Command command) {
+        player.status(command);
+        Collections.sort(wrapped.getTopAlbum());
+        Collections.sort(wrapped.getTopArtist());
+        Collections.sort(wrapped.getTopPodcast());
+        Collections.sort(wrapped.getTopSong());
+        Collections.sort(wrapped.getTopGenre());
+        ResultWrappedUser result = new ResultWrappedUser(command, this);
+        return result;
     }
 
     public final boolean isOffline() {
