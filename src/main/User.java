@@ -509,27 +509,34 @@ public class User implements Visitable {
         }
         if (command.getType().equals("album")) {
             lastsearch = "album";
-            for (int i = 0; i < AlbumLibrary.getINSTANCE().getAlbums().size(); i++) {
-                Album currAlbum = AlbumLibrary.getINSTANCE().getAlbums().get(i);
-                if (filters.get("name") != null) {
-                    if (!currAlbum.getName().startsWith(filters.get("name").textValue())) {
-                        continue;
-                    }
+            for (int i = 0; i < Userbase.getInstance().getUserbase().size(); i++) {
+                User currUser = Userbase.getInstance().getUserbase().get(i);
+                if (currUser.getType() != 1) {
+                    continue;
                 }
-                if (filters.get("owner") != null) {
-                    if (!currAlbum.getUsername().startsWith(filters.get("owner").textValue())) {
-                        continue;
+                Artist art = (Artist) currUser;
+                for (int j = 0; j < art.getAlbums().size(); j++) {
+                    Album currAlbum = art.getAlbums().get(j);
+                    if (filters.get("name") != null) {
+                        if (!currAlbum.getName().startsWith(filters.get("name").textValue())) {
+                            continue;
+                        }
                     }
-                }
-                if (filters.get("description") != null) {
-                    String descr = currAlbum.getDescription();
-                    if (!descr.startsWith(filters.get("description").textValue())) {
-                        continue;
+                    if (filters.get("owner") != null) {
+                        if (!currAlbum.getUsername().startsWith(filters.get("owner").textValue())) {
+                            continue;
+                        }
                     }
-                }
-                searcheditems.addLast(currAlbum);
-                if (searcheditems.size() >= nrmax) {
-                    break;
+                    if (filters.get("description") != null) {
+                        String descr = currAlbum.getDescription();
+                        if (!descr.startsWith(filters.get("description").textValue())) {
+                            continue;
+                        }
+                    }
+                    searcheditems.addLast(currAlbum);
+                    if (searcheditems.size() >= nrmax) {
+                        break;
+                    }
                 }
             }
         }
@@ -1317,8 +1324,18 @@ public class User implements Visitable {
         }
     }
 
-    public ResultWrappedUser printWrapped(final Command command) {
+    public CommandResults printWrapped(final Command command) {
         player.status(command);
+        int tot = wrapped.getTopAlbum().size();
+        tot += wrapped.getTopArtist().size();
+        tot += wrapped.getTopGenre().size();
+        tot += wrapped.getTopPodcast().size();
+        tot += wrapped.getTopSong().size();
+        if (tot == 0) {
+            ResultSwitch res = new ResultSwitch(command);
+            res.setMessage("No data to show for user " + username + ".");
+            return res;
+        }
         Collections.sort(wrapped.getTopAlbum());
         Collections.sort(wrapped.getTopArtist());
         Collections.sort(wrapped.getTopPodcast());
@@ -1783,6 +1800,7 @@ final class Artist extends User {
             sg.setListen(1);
             wrappedartist.songListens.addLast(sg);
         }
+        found = false;
         for (int i = 0; i < wrappedartist.userListens.size(); i++) {
             String name = wrappedartist.userListens.get(i).getUser();
             if (name.equals(currUser.getUsername())) {
@@ -1800,10 +1818,25 @@ final class Artist extends User {
         }
     }
 
-    public ResultWrappedArt wrappedArt(final Command command) {
+    public CommandResults wrappedArt(final Command command) {
+        Userbase userbase = Userbase.getInstance();
+        for (int i = 0; i < userbase.getUserbase().size(); i++) {
+            User currUser = userbase.getUserbase().get(i);
+            if (currUser.getType() == 0 && !currUser.isOffline()) {
+                currUser.getPlayer().status(command);
+            }
+        }
         Collections.sort(wrappedartist.getAlbumListens());
         Collections.sort(wrappedartist.getSongListens());
         Collections.sort(wrappedartist.getUserListens());
+        int tot = wrappedartist.getAlbumListens().size();
+        tot += wrappedartist.getSongListens().size();
+        tot += wrappedartist.userListens.size();
+        if (tot == 0) {
+            ResultSwitch res = new ResultSwitch(command);
+            res.setMessage("No data to show for user " + this.getUsername() + ".");
+            return res;
+        }
         ResultWrappedArt result = new ResultWrappedArt(command, this);
         return result;
     }
