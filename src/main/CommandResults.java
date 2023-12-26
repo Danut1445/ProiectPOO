@@ -3,6 +3,7 @@ package main;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import java.util.Collections;
 import java.util.LinkedList;
 
 public class CommandResults {
@@ -569,6 +570,44 @@ class ResultWrappedUser extends CommandResults {
     }
 
     public void setResult(Result result) {
+        this.result = result;
+    }
+}
+
+class ResultEnd {
+    private final String command = "endProgram";
+    private LinkedList<ObjectNode> result = new LinkedList<>();
+    private final ObjectMapper mapper = new ObjectMapper();
+
+    ResultEnd() {
+        Userbase userbase = Userbase.getInstance();
+        for (int i = 0; i < userbase.getArtistData().size(); i++) {
+            Userbase.ArtistData currArt = userbase.getArtistData().get(i);
+            ObjectNode res = mapper.createObjectNode();
+            ObjectNode finalRes = mapper.createObjectNode();
+            finalRes.put("merchRevenue",currArt.getMerchrev());
+            finalRes.put("songRevenue",currArt.getSongrev());
+            finalRes.put("ranking", i + 1);
+            Collections.sort(currArt.getSongIncs());
+            if (currArt.getSongIncs().get(0).getInc() != 0) {
+                finalRes.put("mostProfitableSong",currArt.getSongIncs().get(0).getSong().getName());
+            } else {
+                finalRes.put("mostProfitableSong","N/A");
+            }
+            res.put(currArt.getArtist(), finalRes);
+            result.addLast(res);
+        }
+    }
+
+    public String getCommand() {
+        return command;
+    }
+
+    public LinkedList<ObjectNode> getResult() {
+        return result;
+    }
+
+    public void setResult(LinkedList<ObjectNode> result) {
         this.result = result;
     }
 }

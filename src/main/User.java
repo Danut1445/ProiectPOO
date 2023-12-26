@@ -650,6 +650,7 @@ public class User implements Visitable {
             updateWrapped("artist", ((Song) selectedItem).getArtist());
             updateWrapped("genre", ((Song) selectedItem).getGenre());
             updateWrapped("album", ((Song) selectedItem).getAlbum());
+            Userbase.getInstance().addStats(((Song) selectedItem).getArtist(), (Song) selectedItem);
         }
         if (lastsearch.equals("playlist")) {
             int aux = ((Playlist) selectedItem).getSongs().size();
@@ -663,6 +664,7 @@ public class User implements Visitable {
             updateWrapped("artist", currSong.getArtist());
             updateWrapped("genre", currSong.getGenre());
             updateWrapped("album", currSong.getAlbum());
+            Userbase.getInstance().addStats(currSong.getArtist(), currSong);
         }
         if (lastsearch.equals("podcast")) {
             PodcastInfo info = containsPodcast(((Podcast) selectedItem).getName());
@@ -694,6 +696,7 @@ public class User implements Visitable {
             updateWrapped("artist", currSong.getArtist());
             updateWrapped("genre", currSong.getGenre());
             updateWrapped("album", currSong.getAlbum());
+            Userbase.getInstance().addStats(currSong.getArtist(), currSong);
         }
         player.setSource(selectedItem);
         player.setLasttimestamp(command.getTimestamp());

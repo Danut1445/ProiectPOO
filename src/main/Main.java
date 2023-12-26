@@ -83,6 +83,7 @@ public final class Main {
 
         Userbase userbase = Userbase.getInstance();
         userbase.setUserbase(new LinkedList<User>());
+        userbase.setArtistData(new LinkedList<>());
         for (int i = 0; i < library.getUsers().size(); i++) {
             userbase.addUser(library.getUsers().get(i));
         }
@@ -313,6 +314,8 @@ public final class Main {
                 }
             }
         }
+        ResultEnd resultEnd = new ResultEnd();
+        results.addLast(resultEnd);
 
         ObjectWriter objectWriter = objectMapper.writerWithDefaultPrettyPrinter();
         objectWriter.writeValue(new File(filePathOutput), results);

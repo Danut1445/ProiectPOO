@@ -8,11 +8,124 @@ public final class Userbase {
     private static final Userbase INSTANCE = new Userbase();
     private LinkedList<User> userbase = new LinkedList<User>();
 
-    class artistData {
+    static class ArtistData implements Comparable<ArtistData>{
+        static class SongInc implements Comparable<SongInc>{
+            private Song song;
+            private double inc;
 
+            public Song getSong() {
+                return song;
+            }
+
+            public void setSong(Song song) {
+                this.song = song;
+            }
+
+            public double getInc() {
+                return inc;
+            }
+
+            public void setInc(double inc) {
+                this.inc = inc;
+            }
+
+            @Override
+            public int compareTo(SongInc o) {
+                if (o.getInc() - inc > 0) {
+                    return 1;
+                }
+                if (o.getInc() - inc < 0) {
+                    return -1;
+                }
+                return 0;
+            }
+        }
+
+        private String artist;
+        private double songrev;
+        private double merchrev;
+        private LinkedList<SongInc> songIncs = new LinkedList<>();
+
+        public String getArtist() {
+            return artist;
+        }
+
+        public void setArtist(String artist) {
+            this.artist = artist;
+        }
+
+        public double getSongrev() {
+            return songrev;
+        }
+
+        public void setSongrev(double songrev) {
+            this.songrev = songrev;
+        }
+
+        public double getMerchrev() {
+            return merchrev;
+        }
+
+        public void setMerchrev(double merchrev) {
+            this.merchrev = merchrev;
+        }
+
+        public LinkedList<SongInc> getSongIncs() {
+            return songIncs;
+        }
+
+        public void setSongIncs(LinkedList<SongInc> songIncs) {
+            this.songIncs = songIncs;
+        }
+
+        @Override
+        public int compareTo(ArtistData o) {
+            if ((o.getSongrev() + o.getMerchrev()) - (merchrev + songrev) > 0) {
+                return 1;
+            }
+            if ((o.getSongrev() + o.getMerchrev()) - (merchrev + songrev) < 0) {
+                return -1;
+            }
+            return 0;
+        }
     }
 
+    private LinkedList<ArtistData> artistData = new LinkedList<>();
+
     private Userbase() {
+    }
+
+    public void addStats(final String artist, final Song currSong) {
+        boolean found = false;
+        for (int i = 0; i < artistData.size(); i++) {
+            if (artistData.get(i).getArtist().equals(artist)) {
+                found = true;
+                boolean foundsong = false;
+                ArtistData currArt = artistData.get(i);
+                for (int  j = 1; j < currArt.getSongIncs().size(); j++) {
+                    String sg = currArt.getSongIncs().get(j).getSong().getName();
+                    if (sg.equals(currSong.getName())) {
+                        foundsong = true;
+                        break;
+                    }
+                }
+                if (!foundsong) {
+                    ArtistData.SongInc songInc = new ArtistData.SongInc();
+                    songInc.setSong(currSong);
+                    songInc.setInc(0);
+                    currArt.getSongIncs().addLast(songInc);
+                }
+                break;
+            }
+        }
+        if (!found) {
+            ArtistData.SongInc songInc = new ArtistData.SongInc();
+            songInc.setSong(currSong);
+            songInc.setInc(0);
+            artistData.addLast(new ArtistData());
+            artistData.getLast().getSongIncs().addLast(songInc);
+            artistData.getLast().setArtist(artist);
+        }
     }
 
     /**
@@ -290,5 +403,13 @@ public final class Userbase {
 
     public void setUserbase(final LinkedList<User> userbase) {
         this.userbase = userbase;
+    }
+
+    public LinkedList<ArtistData> getArtistData() {
+        return artistData;
+    }
+
+    public void setArtistData(LinkedList<ArtistData> artistData) {
+        this.artistData = artistData;
     }
 }
