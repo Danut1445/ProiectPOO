@@ -1,5 +1,8 @@
 package main;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import java.util.LinkedList;
 
 public class CommandResults {
@@ -485,50 +488,51 @@ class ResultPodcast extends CommandResults {
 }
 
 class ResultWrappedUser extends CommandResults {
+    final ObjectMapper mapper = new ObjectMapper();
     class Result {
-        private LinkedList<String> topArtists = new LinkedList<>();
-        private LinkedList<String> topGenres = new LinkedList<>();
-        private LinkedList<String> topSongs = new LinkedList<>();
-        private LinkedList<String> topAlbums = new LinkedList<>();
-        private LinkedList<String> topPodcast = new LinkedList<>();
+        private ObjectNode topArtists = mapper.createObjectNode();
+        private ObjectNode topGenres = mapper.createObjectNode();
+        private ObjectNode topSongs = mapper.createObjectNode();
+        private ObjectNode topAlbums = mapper.createObjectNode();
+        private ObjectNode topPodcast = mapper.createObjectNode();
 
-        public LinkedList<String> getTopArtists() {
+        public ObjectNode getTopArtists() {
             return topArtists;
         }
 
-        public void setTopArtists(LinkedList<String> topArtists) {
+        public void setTopArtists(ObjectNode topArtists) {
             this.topArtists = topArtists;
         }
 
-        public LinkedList<String> getTopGenres() {
+        public ObjectNode getTopGenres() {
             return topGenres;
         }
 
-        public void setTopGenres(LinkedList<String> topGenres) {
+        public void setTopGenres(ObjectNode topGenres) {
             this.topGenres = topGenres;
         }
 
-        public LinkedList<String> getTopSongs() {
+        public ObjectNode getTopSongs() {
             return topSongs;
         }
 
-        public void setTopSongs(LinkedList<String> topSongs) {
+        public void setTopSongs(ObjectNode topSongs) {
             this.topSongs = topSongs;
         }
 
-        public LinkedList<String> getTopAlbums() {
+        public ObjectNode getTopAlbums() {
             return topAlbums;
         }
 
-        public void setTopAlbums(LinkedList<String> topAlbums) {
+        public void setTopAlbums(ObjectNode topAlbums) {
             this.topAlbums = topAlbums;
         }
 
-        public LinkedList<String> getTopPodcast() {
+        public ObjectNode getTopPodcast() {
             return topPodcast;
         }
 
-        public void setTopPodcast(LinkedList<String> topPodcast) {
+        public void setTopPodcast(ObjectNode topPodcast) {
             this.topPodcast = topPodcast;
         }
     }
@@ -540,23 +544,23 @@ class ResultWrappedUser extends CommandResults {
         final int basecase = 5;
         LinkedList<User.Wrapped.SongListen> songs = user.getWrapped().getTopSong();
         for (int i = 0; i < basecase && i < songs.size(); i++) {
-            result.getTopSongs().addLast((songs.get(i).getSong().getName() + ": " + songs.get(i).getListen()));
+            result.getTopSongs().put(songs.get(i).getSong().getName(), songs.get(i).getListen());
         }
         LinkedList<User.Wrapped.ArtistListen> artist = user.getWrapped().getTopArtist();
         for (int i = 0; i < basecase && i < artist.size(); i++) {
-            result.getTopArtists().addLast(artist.get(i).getArtist() + ": " + artist.get(i).getListen());
+            result.getTopArtists().put(artist.get(i).getArtist(), artist.get(i).getListen());
         }
         LinkedList<User.Wrapped.PodcastListen> podcast = user.getWrapped().getTopPodcast();
         for (int i = 0; i < basecase && i < podcast.size(); i++) {
-            result.getTopPodcast().addLast(podcast.get(i).getPodcast().getName() + ": " + podcast.get(i).getListen());
+            result.getTopPodcast().put(podcast.get(i).getPodcast().getName(), podcast.get(i).getListen());
         }
         LinkedList<User.Wrapped.GenreListen> genre = user.getWrapped().getTopGenre();
         for (int i = 0; i < basecase && i < genre.size(); i++) {
-            result.getTopGenres().addLast(genre.get(i).getGenre() + ": " + genre.get(i).getListen());
+            result.getTopGenres().put(genre.get(i).getGenre(), genre.get(i).getListen());
         }
         LinkedList<User.Wrapped.AlbumListen> album = user.getWrapped().getTopAlbum();
         for (int i = 0; i < basecase && i < album.size(); i++) {
-            result.getTopAlbums().addLast(album.get(i).getAlbum() + ": " + album.get(i).getListen());
+            result.getTopAlbums().put(album.get(i).getAlbum(), album.get(i).getListen());
         }
     }
 

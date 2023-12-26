@@ -8,6 +8,10 @@ public final class Userbase {
     private static final Userbase INSTANCE = new Userbase();
     private LinkedList<User> userbase = new LinkedList<User>();
 
+    class artistData {
+
+    }
+
     private Userbase() {
     }
 
