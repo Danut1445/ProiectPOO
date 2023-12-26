@@ -77,10 +77,10 @@ public final class Main {
         ArrayNode outputs = objectMapper.createArrayNode();
         LinkedList<Object> results = new LinkedList<Object>();
 
-//        System.out.println(filePathInput);
-//        if (!filePathInput.equals("test02_etapa3_wrapped_n_user_one_artist.json")) {
-//            return;
-//        }
+        System.out.println(filePathInput);
+        if (!filePathInput.equals("test01_etapa3_wrapped_one_user_n_artist.json")) {
+            return;
+        }
 
         Library librarySongs = Library.getInstance();
         librarySongs.setSongs(new LinkedList<Song>());
