@@ -37,7 +37,7 @@ public final class Userbase {
                 if (o.getInc() - inc < 0) {
                     return -1;
                 }
-                return 0;
+                return -(o.getSong().getName().compareTo(song.getName()));
             }
         }
 
@@ -86,7 +86,7 @@ public final class Userbase {
             if ((o.getSongrev() + o.getMerchrev()) - (merchrev + songrev) < 0) {
                 return -1;
             }
-            return 0;
+            return -(o.getArtist().compareTo(artist));
         }
     }
 

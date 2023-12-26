@@ -651,6 +651,7 @@ class ResultEnd {
 
     ResultEnd() {
         Userbase userbase = Userbase.getInstance();
+        Collections.sort(userbase.getArtistData());
         for (int i = 0; i < userbase.getArtistData().size(); i++) {
             Userbase.ArtistData currArt = userbase.getArtistData().get(i);
             ObjectNode res = mapper.createObjectNode();

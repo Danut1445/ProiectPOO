@@ -375,19 +375,10 @@ public class User implements Visitable {
         }
         if (command.getType().equals("song")) {
             lastsearch = "song";
-            if (command.getTimestamp() == 6135 && username.equals("david27")) {
-                System.out.println("WOW SO COOL!");
-                System.out.println(filters.get("name").textValue());
-            }
             for (int i = 0; i < Library.getInstance().getSongs().size(); i++) {
                 Song currSong = Library.getInstance().getSongs().get(i);
                 if (filters.get("name") != null) {
-                    if (command.getTimestamp() == 6135 && username.equals("david27")) {
-                        if (currSong.getName().equals("Around And Around - Single Version")) {
-                            System.out.println(currSong.getName() + " " + filters.get("name").textValue() + " " + currSong.getName().startsWith(filters.get("name").textValue()));
-                        }
-                    }
-                    if (!currSong.getName().startsWith(filters.get("name").textValue())) {
+                    if (!currSong.getName().toLowerCase().startsWith(filters.get("name").textValue().toLowerCase())) {
                         continue;
                     }
                 }
