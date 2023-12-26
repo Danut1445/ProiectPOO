@@ -651,6 +651,7 @@ public class User implements Visitable {
             updateWrapped("genre", ((Song) selectedItem).getGenre());
             updateWrapped("album", ((Song) selectedItem).getAlbum());
             Userbase.getInstance().addStats(((Song) selectedItem).getArtist(), (Song) selectedItem);
+            Userbase.getInstance().updateArt((Song) selectedItem, this, ((Song) selectedItem).getArtist());
         }
         if (lastsearch.equals("playlist")) {
             int aux = ((Playlist) selectedItem).getSongs().size();
@@ -665,6 +666,7 @@ public class User implements Visitable {
             updateWrapped("genre", currSong.getGenre());
             updateWrapped("album", currSong.getAlbum());
             Userbase.getInstance().addStats(currSong.getArtist(), currSong);
+            Userbase.getInstance().updateArt(currSong, this, currSong.getArtist());
         }
         if (lastsearch.equals("podcast")) {
             PodcastInfo info = containsPodcast(((Podcast) selectedItem).getName());
@@ -697,6 +699,7 @@ public class User implements Visitable {
             updateWrapped("genre", currSong.getGenre());
             updateWrapped("album", currSong.getAlbum());
             Userbase.getInstance().addStats(currSong.getArtist(), currSong);
+            Userbase.getInstance().updateArt(currSong, this, currSong.getArtist());
         }
         player.setSource(selectedItem);
         player.setLasttimestamp(command.getTimestamp());
@@ -1526,6 +1529,128 @@ final class Artist extends User {
 
     private LinkedList<Merch> merch = new LinkedList<Merch>();
 
+    class Wrapped {
+        static class SongListen implements Comparable<SongListen>{
+            private String song;
+            private int listen;
+
+            public String getSong() {
+                return song;
+            }
+
+            public void setSong(String song) {
+                this.song = song;
+            }
+
+            public int getListen() {
+                return listen;
+            }
+
+            public void setListen(int listen) {
+                this.listen = listen;
+            }
+
+            @Override
+            public int compareTo(SongListen o) {
+                if (o.getListen() - listen == 0) {
+                    return -(o.getSong().compareTo(song));
+                } else {
+                    return o.getListen() - listen;
+                }
+            }
+        }
+
+        static class AlbumListen implements Comparable<AlbumListen>{
+            private String album;
+            private int listen;
+
+            public String getAlbum() {
+                return album;
+            }
+
+            public void setAlbum(String album) {
+                this.album = album;
+            }
+
+            public int getListen() {
+                return listen;
+            }
+
+            public void setListen(int listen) {
+                this.listen = listen;
+            }
+
+            @Override
+            public int compareTo(AlbumListen o) {
+                if (o.getListen() - listen == 0) {
+                    return -(o.getAlbum().compareTo(album));
+                } else {
+                    return o.getListen() - listen;
+                }
+            }
+        }
+
+        static class UserListen implements Comparable<UserListen>{
+            private String user;
+            private int listen;
+
+            public String getUser() {
+                return user;
+            }
+
+            public void setUser(String user) {
+                this.user = user;
+            }
+
+            public int getListen() {
+                return listen;
+            }
+
+            public void setListen(int listen) {
+                this.listen = listen;
+            }
+
+            @Override
+            public int compareTo(UserListen o) {
+                if (o.getListen() - listen == 0) {
+                    return -(o.getUser().compareTo(user));
+                } else {
+                    return o.getListen() - listen;
+                }
+            }
+        }
+
+        LinkedList<SongListen> songListens = new LinkedList<>();
+        LinkedList<AlbumListen> albumListens = new LinkedList<>();
+        LinkedList<UserListen> userListens = new LinkedList<>();
+
+        public LinkedList<SongListen> getSongListens() {
+            return songListens;
+        }
+
+        public void setSongListens(LinkedList<SongListen> songListens) {
+            this.songListens = songListens;
+        }
+
+        public LinkedList<AlbumListen> getAlbumListens() {
+            return albumListens;
+        }
+
+        public void setAlbumListens(LinkedList<AlbumListen> albumListens) {
+            this.albumListens = albumListens;
+        }
+
+        public LinkedList<UserListen> getUserListens() {
+            return userListens;
+        }
+
+        public void setUserListens(LinkedList<UserListen> userListens) {
+            this.userListens = userListens;
+        }
+    }
+
+    Wrapped wrappedartist = new Wrapped();
+
     Artist(final Command command) {
         super(command);
         this.setType(1);
@@ -1625,6 +1750,64 @@ final class Artist extends User {
         return result;
     }
 
+    public void updateWrapped(User currUser, Song currSong) {
+        boolean found = false;
+        for (int i = 0; i < wrappedartist.albumListens.size(); i++) {
+            String name = wrappedartist.albumListens.get(i).getAlbum();
+            if (name.equals(currSong.getAlbum())) {
+                int nr = wrappedartist.albumListens.get(i).getListen();
+                wrappedartist.albumListens.get(i).setListen(nr + 1);
+                found=true;
+                break;
+            }
+        }
+        if (!found) {
+            Wrapped.AlbumListen alb = new Wrapped.AlbumListen();
+            alb.setAlbum(currSong.getAlbum());
+            alb.setListen(1);
+            wrappedartist.albumListens.addLast(alb);
+        }
+        found = false;
+        for (int i = 0; i < wrappedartist.songListens.size(); i++) {
+            String name = wrappedartist.songListens.get(i).getSong();
+            if (name.equals(currSong.getName())) {
+                int nr = wrappedartist.songListens.get(i).getListen();
+                wrappedartist.songListens.get(i).setListen(nr + 1);
+                found=true;
+                break;
+            }
+        }
+        if (!found) {
+            Wrapped.SongListen sg = new Wrapped.SongListen();
+            sg.setSong(currSong.getName());
+            sg.setListen(1);
+            wrappedartist.songListens.addLast(sg);
+        }
+        for (int i = 0; i < wrappedartist.userListens.size(); i++) {
+            String name = wrappedartist.userListens.get(i).getUser();
+            if (name.equals(currUser.getUsername())) {
+                int nr = wrappedartist.userListens.get(i).getListen();
+                wrappedartist.userListens.get(i).setListen(nr + 1);
+                found=true;
+                break;
+            }
+        }
+        if (!found) {
+            Wrapped.UserListen usr = new Wrapped.UserListen();
+            usr.setUser(currUser.getUsername());
+            usr.setListen(1);
+            wrappedartist.userListens.addLast(usr);
+        }
+    }
+
+    public ResultWrappedArt wrappedArt(final Command command) {
+        Collections.sort(wrappedartist.getAlbumListens());
+        Collections.sort(wrappedartist.getSongListens());
+        Collections.sort(wrappedartist.getUserListens());
+        ResultWrappedArt result = new ResultWrappedArt(command, this);
+        return result;
+    }
+
     public LinkedList<Album> getAlbums() {
         return albums;
     }
@@ -1655,6 +1838,14 @@ final class Artist extends User {
 
     public void setNrLikes(final int nrLikes) {
         this.nrLikes = nrLikes;
+    }
+
+    public Wrapped getWrappedartist() {
+        return wrappedartist;
+    }
+
+    public void setWrappedartist(Wrapped wrappedartist) {
+        this.wrappedartist = wrappedartist;
     }
 }
 

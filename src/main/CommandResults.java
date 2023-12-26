@@ -495,7 +495,7 @@ class ResultWrappedUser extends CommandResults {
         private ObjectNode topGenres = mapper.createObjectNode();
         private ObjectNode topSongs = mapper.createObjectNode();
         private ObjectNode topAlbums = mapper.createObjectNode();
-        private ObjectNode topPodcast = mapper.createObjectNode();
+        private ObjectNode topPodcasts = mapper.createObjectNode();
 
         public ObjectNode getTopArtists() {
             return topArtists;
@@ -529,12 +529,12 @@ class ResultWrappedUser extends CommandResults {
             this.topAlbums = topAlbums;
         }
 
-        public ObjectNode getTopPodcast() {
-            return topPodcast;
+        public ObjectNode getTopPodcasts() {
+            return topPodcasts;
         }
 
-        public void setTopPodcast(ObjectNode topPodcast) {
-            this.topPodcast = topPodcast;
+        public void setTopPodcasts(ObjectNode topPodcast) {
+            this.topPodcasts = topPodcast;
         }
     }
 
@@ -553,7 +553,7 @@ class ResultWrappedUser extends CommandResults {
         }
         LinkedList<User.Wrapped.PodcastListen> podcast = user.getWrapped().getTopPodcast();
         for (int i = 0; i < basecase && i < podcast.size(); i++) {
-            result.getTopPodcast().put(podcast.get(i).getPodcast().getName(), podcast.get(i).getListen());
+            result.getTopPodcasts().put(podcast.get(i).getPodcast().getName(), podcast.get(i).getListen());
         }
         LinkedList<User.Wrapped.GenreListen> genre = user.getWrapped().getTopGenre();
         for (int i = 0; i < basecase && i < genre.size(); i++) {
@@ -574,10 +574,80 @@ class ResultWrappedUser extends CommandResults {
     }
 }
 
+class ResultWrappedArt extends CommandResults {
+    final ObjectMapper mapper = new ObjectMapper();
+    class Result {
+        private ObjectNode topAlbums = mapper.createObjectNode();
+        private ObjectNode topSongs = mapper.createObjectNode();
+        private LinkedList<String> topFans = new LinkedList<>();
+        private int listeners;
+
+        public ObjectNode getTopAlbums() {
+            return topAlbums;
+        }
+
+        public void setTopAlbums(ObjectNode topAlbums) {
+            this.topAlbums = topAlbums;
+        }
+
+        public ObjectNode getTopSongs() {
+            return topSongs;
+        }
+
+        public void setTopSongs(ObjectNode topSongs) {
+            this.topSongs = topSongs;
+        }
+
+        public LinkedList<String> getTopFans() {
+            return topFans;
+        }
+
+        public void setTopFans(LinkedList<String> topFans) {
+            this.topFans = topFans;
+        }
+
+        public int getListeners() {
+            return listeners;
+        }
+
+        public void setListeners(int listeners) {
+            this.listeners = listeners;
+        }
+    }
+
+    ResultWrappedArt.Result result = new ResultWrappedArt.Result();
+
+    ResultWrappedArt(final Command command, final Artist artist) {
+        super(command);
+        final int basecase = 5;
+        LinkedList<Artist.Wrapped.AlbumListen> albums = artist.getWrappedartist().getAlbumListens();
+        for (int i = 0; i < basecase && i < albums.size(); i++) {
+            result.getTopAlbums().put(albums.get(i).getAlbum(), albums.get(i).getListen());
+        }
+        LinkedList<Artist.Wrapped.SongListen> songs = artist.getWrappedartist().getSongListens();
+        for (int i = 0; i < basecase && i < songs.size(); i++) {
+            result.getTopSongs().put(songs.get(i).getSong(), songs.get(i).getListen());
+        }
+        LinkedList<Artist.Wrapped.UserListen> user = artist.getWrappedartist().getUserListens();
+        for (int i = 0; i < basecase && i < user.size(); i++) {
+            result.getTopFans().addLast(user.get(i).getUser());
+        }
+        result.setListeners(user.size());
+    }
+
+    public Result getResult() {
+        return result;
+    }
+
+    public void setResult(Result result) {
+        this.result = result;
+    }
+}
+
 class ResultEnd {
     private final String command = "endProgram";
-    private LinkedList<ObjectNode> result = new LinkedList<>();
     private final ObjectMapper mapper = new ObjectMapper();
+    private ObjectNode result = mapper.createObjectNode();
 
     ResultEnd() {
         Userbase userbase = Userbase.getInstance();
@@ -594,8 +664,7 @@ class ResultEnd {
             } else {
                 finalRes.put("mostProfitableSong","N/A");
             }
-            res.put(currArt.getArtist(), finalRes);
-            result.addLast(res);
+            result.put(currArt.getArtist(), finalRes);
         }
     }
 
@@ -603,11 +672,11 @@ class ResultEnd {
         return command;
     }
 
-    public LinkedList<ObjectNode> getResult() {
+    public ObjectNode getResult() {
         return result;
     }
 
-    public void setResult(LinkedList<ObjectNode> result) {
+    public void setResult(ObjectNode result) {
         this.result = result;
     }
 }

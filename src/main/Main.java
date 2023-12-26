@@ -312,6 +312,9 @@ public final class Main {
                 if (currUser.getType() == 0) {
                     results.addLast(currUser.printWrapped(currComm));
                 }
+                if (currUser.getType() == 1) {
+                    results.addLast(((Artist) currUser).wrappedArt(currComm));
+                }
             }
         }
         ResultEnd resultEnd = new ResultEnd();

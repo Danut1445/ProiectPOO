@@ -397,6 +397,17 @@ public final class Userbase {
         }
         return result;
     }
+
+    public void updateArt(Song currSong, User currUser, String artist)
+    {
+        for (int i = 0; i < userbase.size(); i++) {
+            if (userbase.get(i).getType() == 1 && userbase.get(i).getUsername().equals(artist)) {
+                ((Artist) userbase.get(i)).updateWrapped(currUser, currSong);
+                break;
+            }
+        }
+    }
+
     public LinkedList<User> getUserbase() {
         return userbase;
     }

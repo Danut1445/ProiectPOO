@@ -94,6 +94,7 @@ public final class Player {
                     currUser.updateWrapped("genre", ((Song) currFile).getGenre());
                     currUser.updateWrapped("artist", ((Song) currFile).getArtist());
                     Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
+                    Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
                 } else {
                     passedtime = 0;
                     timeremaining = timeremaining - (command.getTimestamp() - lasttimestamp);
@@ -116,6 +117,7 @@ public final class Player {
                         currUser.updateWrapped("genre", ((Song) currFile).getGenre());
                         currUser.updateWrapped("artist", ((Song) currFile).getArtist());
                         Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
+                        Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
                     } else {
                         timeremaining -= passedtime;
                         passedtime = 0;
@@ -145,6 +147,7 @@ public final class Player {
                     currUser.updateWrapped("genre", ((Song) currFile).getGenre());
                     currUser.updateWrapped("artist", ((Song) currFile).getArtist());
                     Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
+                    Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
                 }
             }
             if (repeat == 1) {
@@ -165,6 +168,7 @@ public final class Player {
                     currUser.updateWrapped("genre", ((Song) currFile).getGenre());
                     currUser.updateWrapped("artist", ((Song) currFile).getArtist());
                     Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
+                    Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
                 }
             }
             if (repeat == 2) {
@@ -180,6 +184,7 @@ public final class Player {
                     currUser.updateWrapped("genre", ((Song) currFile).getGenre());
                     currUser.updateWrapped("artist", ((Song) currFile).getArtist());
                     Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
+                    Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
                 }
             }
         }
@@ -205,6 +210,7 @@ public final class Player {
                     currUser.updateWrapped("genre", ((Song) currFile).getGenre());
                     currUser.updateWrapped("artist", ((Song) currFile).getArtist());
                     Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
+                    Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
                 }
             }
             if (repeat == 1) {
@@ -225,7 +231,7 @@ public final class Player {
                     currUser.updateWrapped("genre", ((Song) currFile).getGenre());
                     currUser.updateWrapped("artist", ((Song) currFile).getArtist());
                     Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
-
+                    Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
                 }
             }
             if (repeat == 2) {
@@ -241,6 +247,7 @@ public final class Player {
                     currUser.updateWrapped("genre", ((Song) currFile).getGenre());
                     currUser.updateWrapped("artist", ((Song) currFile).getArtist());
                     Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
+                    Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
                 }
             }
         }
@@ -385,6 +392,7 @@ public final class Player {
                     currUser.updateWrapped("genre", ((Song) currFile).getGenre());
                     currUser.updateWrapped("artist", ((Song) currFile).getArtist());
                     Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
+                    Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
                 }
             }
             if (type.equals("album")) {
@@ -398,6 +406,7 @@ public final class Player {
                     currUser.updateWrapped("genre", ((Song) currFile).getGenre());
                     currUser.updateWrapped("artist", ((Song) currFile).getArtist());
                     Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
+                    Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
                 }
             }
         }
@@ -410,6 +419,7 @@ public final class Player {
                 currUser.updateWrapped("genre", ((Song) currFile).getGenre());
                 currUser.updateWrapped("artist", ((Song) currFile).getArtist());
                 Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
+                Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
             }
             currentObject++;
             if (type.equals("podcast")) {
@@ -429,6 +439,7 @@ public final class Player {
                 currUser.updateWrapped("genre", ((Song) currFile).getGenre());
                 currUser.updateWrapped("artist", ((Song) currFile).getArtist());
                 Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
+                Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
             }
             if (type.equals("album")) {
                 if (currentObject >= ((Album) source).getSongs().size()) {
@@ -441,6 +452,7 @@ public final class Player {
                 currUser.updateWrapped("genre", ((Song) currFile).getGenre());
                 currUser.updateWrapped("artist", ((Song) currFile).getArtist());
                 Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
+                Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
             }
         }
         if (repeat == 2) {
@@ -451,6 +463,7 @@ public final class Player {
                 currUser.updateWrapped("genre", ((Song) currFile).getGenre());
                 currUser.updateWrapped("artist", ((Song) currFile).getArtist());
                 Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
+                Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
             }
             if (type.equals("podcast")) {
                 currFile = ((Podcast) source).getEpisodes().get(currentObject);
@@ -464,6 +477,7 @@ public final class Player {
                 currUser.updateWrapped("genre", ((Song) currFile).getGenre());
                 currUser.updateWrapped("artist", ((Song) currFile).getArtist());
                 Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
+                Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
             }
             if (type.equals("album")) {
                 currFile = ((Album) source).getSongs().get(order[currentObject]);
@@ -473,6 +487,7 @@ public final class Player {
                 currUser.updateWrapped("genre", ((Song) currFile).getGenre());
                 currUser.updateWrapped("artist", ((Song) currFile).getArtist());
                 Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
+                Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
             }
         }
         if (type.equals("nothing")) {
@@ -496,6 +511,7 @@ public final class Player {
             currUser.updateWrapped("genre", ((Song) currFile).getGenre());
             currUser.updateWrapped("artist", ((Song) currFile).getArtist());
             Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
+            Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
         } else {
             currentObject--;
             if (type.equals("podcast")) {
@@ -510,6 +526,7 @@ public final class Player {
                 currUser.updateWrapped("genre", ((Song) currFile).getGenre());
                 currUser.updateWrapped("artist", ((Song) currFile).getArtist());
                 Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
+                Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
             }
             if (type.equals("album")) {
                 currFile = ((Album) source).getSongs().get(order[currentObject]);
@@ -519,6 +536,7 @@ public final class Player {
                 currUser.updateWrapped("genre", ((Song) currFile).getGenre());
                 currUser.updateWrapped("artist", ((Song) currFile).getArtist());
                 Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
+                Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
             }
         }
     }
