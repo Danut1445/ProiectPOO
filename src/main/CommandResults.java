@@ -650,14 +650,19 @@ class ResultEnd {
     private ObjectNode result = mapper.createObjectNode();
 
     ResultEnd() {
+        double inc;
         Userbase userbase = Userbase.getInstance();
         Collections.sort(userbase.getArtistData());
         for (int i = 0; i < userbase.getArtistData().size(); i++) {
             Userbase.ArtistData currArt = userbase.getArtistData().get(i);
             ObjectNode res = mapper.createObjectNode();
             ObjectNode finalRes = mapper.createObjectNode();
-            finalRes.put("merchRevenue",currArt.getMerchrev());
-            finalRes.put("songRevenue",currArt.getSongrev());
+            inc = currArt.getMerchrev();
+            inc = Math.round(inc * 100.0) / 100.0;
+            finalRes.put("merchRevenue",inc);
+            inc = currArt.getSongrev();
+            inc = Math.round(inc * 100.0) / 100.0;
+            finalRes.put("songRevenue",inc);
             finalRes.put("ranking", i + 1);
             Collections.sort(currArt.getSongIncs());
             if (currArt.getSongIncs().get(0).getInc() != 0) {

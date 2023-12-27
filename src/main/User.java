@@ -273,6 +273,35 @@ public class User implements Visitable {
 
     private Wrapped wrapped = new Wrapped();
 
+    class Premium {
+        private LinkedList<Wrapped.SongListen> songs = new LinkedList<>();
+        private int totalls;
+
+        public void reserList() {
+            songs = new LinkedList<>();
+            totalls = 0;
+        }
+
+        public LinkedList<Wrapped.SongListen> getSongs() {
+            return songs;
+        }
+
+        public void setSongs(LinkedList<Wrapped.SongListen> songs) {
+            this.songs = songs;
+        }
+
+        public int getTotalls() {
+            return totalls;
+        }
+
+        public void setTotalls(int totalls) {
+            this.totalls = totalls;
+        }
+    }
+
+    final Premium premium = new Premium();
+    boolean isPremium = false;
+
     public User(final UserInput user) {
         this.age = user.getAge();
         this.city = user.getCity();
@@ -1252,6 +1281,24 @@ public class User implements Visitable {
                 wrapped.getTopSong().getLast().setListen(1);
                 wrapped.getTopSong().getLast().setSong(currSong);
             }
+            if (isPremium) {
+                exists = false;
+                premium.setTotalls(premium.getTotalls() + 1);
+                for (int i = 0; i < premium.getSongs().size(); i++) {
+                    Song wrsg = premium.getSongs().get(i).getSong();
+                    if (wrsg.getName().equals(currSong.getName())) {
+                        exists = true;
+                        int listens = premium.getSongs().get(i).getListen();
+                        premium.getSongs().get(i).setListen(listens + 1);
+                        break;
+                    }
+                }
+                if (!exists) {
+                    premium.getSongs().addLast(new Wrapped.SongListen());
+                    premium.getSongs().getLast().setListen(1);
+                    premium.getSongs().getLast().setSong(currSong);
+                }
+            }
             return;
         }
         if (type.equals("album")) {
@@ -1345,6 +1392,59 @@ public class User implements Visitable {
         Collections.sort(wrapped.getTopSong());
         Collections.sort(wrapped.getTopGenre());
         ResultWrappedUser result = new ResultWrappedUser(command, this);
+        return result;
+    }
+
+    public ResultSwitch buyPremium(final Command command) {
+        ResultSwitch result = new ResultSwitch(command);
+        if (type != 0) {
+            result.setMessage(username + " is not a normal user.");
+            return result;
+        }
+        if (isPremium) {
+            result.setMessage(username + " is already a premium user.");
+            return result;
+        }
+        isPremium = true;
+        premium.reserList();
+        result.setMessage(username + " bought the subscription successfully.");
+        return result;
+    }
+
+    public ResultSwitch cancelPremium(final Command command) {
+        ResultSwitch result = new ResultSwitch(command);
+        if (type != 0) {
+            result.setMessage(username + " is not a normal user.");
+            return result;
+        }
+        if (!isPremium) {
+            result.setMessage(username + " is not a premium user.");
+            return result;
+        }
+        Userbase ub = Userbase.getInstance();
+        for (int i = 0; i < premium.getSongs().size(); i++) {
+            Song crSg = premium.getSongs().get(i).getSong();
+            for (int j = 0; j < ub.getArtistData().size(); j++) {
+                Userbase.ArtistData artd = ub.getArtistData().get(j);
+                if (artd.getArtist().equals(crSg.getArtist())) {
+                    for (int k = 0; k < artd.getSongIncs().size(); k++) {
+                        String crname = artd.getSongIncs().get(k).getSong().getName();
+                        if (crname.equals(crSg.getName())) {
+                            double inc = artd.getSongIncs().get(k).getInc();
+                            inc += ((double) 1000000 / premium.getTotalls()) * premium.getSongs().get(i).getListen();
+                            artd.getSongIncs().get(k).setInc(inc);
+                            break;
+                        }
+                    }
+                    double inc = artd.getSongrev();
+                    inc += ((double) 1000000 / premium.getTotalls()) * premium.getSongs().get(i).getListen();
+                    artd.setSongrev(inc);
+                    break;
+                }
+            }
+        }
+        isPremium = false;
+        result.setMessage(username + " cancelled the subscription successfully.");
         return result;
     }
 
@@ -1837,7 +1937,7 @@ final class Artist extends User {
         tot += wrappedartist.userListens.size();
         if (tot == 0) {
             ResultSwitch res = new ResultSwitch(command);
-            res.setMessage("No data to show for user " + this.getUsername() + ".");
+            res.setMessage("No data to show for artist " + this.getUsername() + ".");
             return res;
         }
         ResultWrappedArt result = new ResultWrappedArt(command, this);

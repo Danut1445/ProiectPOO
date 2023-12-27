@@ -321,6 +321,27 @@ public final class Main {
                     results.addLast(((Artist) currUser).wrappedArt(currComm));
                 }
             }
+            if (currComm.getCommand().equals("buyPremium")) {
+                if (!currUser.getUsername().equals(currComm.getUsername())) {
+                    ResultSwitch res = new ResultSwitch(currComm);
+                    res.setMessage("The username " + currComm.getUsername() + " doesn't exist.");
+                    results.addLast(res);
+                    continue;
+                }
+                results.addLast(currUser.buyPremium(currComm));
+            }
+            if (currComm.getCommand().equals("cancelPremium")) {
+                if (!currUser.getUsername().equals(currComm.getUsername())) {
+                    ResultSwitch res = new ResultSwitch(currComm);
+                    res.setMessage("The username " + currComm.getUsername() + " doesn't exist.");
+                    results.addLast(res);
+                    continue;
+                }
+                results.addLast(currUser.cancelPremium(currComm));
+            }
+        }
+        for (int i = 0; i < userbase.getUserbase().size(); i++) {
+            userbase.getUserbase().get(i).cancelPremium(commands.getLast());
         }
         ResultEnd resultEnd = new ResultEnd();
         results.addLast(resultEnd);
