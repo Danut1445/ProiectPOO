@@ -78,7 +78,7 @@ public final class Main {
         LinkedList<Object> results = new LinkedList<Object>();
 
 //        System.out.println(filePathInput);
-//        if (!filePathInput.equals("test01_etapa3_wrapped_one_user_n_artist.json")) {
+//        if (!filePathInput.equals("test03_etapa3_wrapped_n_user_n_artist.json")) {
 //            return;
 //        }
 

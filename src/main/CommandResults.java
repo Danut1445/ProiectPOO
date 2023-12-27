@@ -495,7 +495,7 @@ class ResultWrappedUser extends CommandResults {
         private ObjectNode topGenres = mapper.createObjectNode();
         private ObjectNode topSongs = mapper.createObjectNode();
         private ObjectNode topAlbums = mapper.createObjectNode();
-        private ObjectNode topPodcasts = mapper.createObjectNode();
+        private ObjectNode topEpisodes = mapper.createObjectNode();
 
         public ObjectNode getTopArtists() {
             return topArtists;
@@ -529,12 +529,12 @@ class ResultWrappedUser extends CommandResults {
             this.topAlbums = topAlbums;
         }
 
-        public ObjectNode getTopPodcasts() {
-            return topPodcasts;
+        public ObjectNode getTopEpisodes() {
+            return topEpisodes;
         }
 
-        public void setTopPodcasts(ObjectNode topPodcast) {
-            this.topPodcasts = topPodcast;
+        public void setTopEpisodes(ObjectNode topEpisodes) {
+            this.topEpisodes = topEpisodes;
         }
     }
 
@@ -551,9 +551,9 @@ class ResultWrappedUser extends CommandResults {
         for (int i = 0; i < basecase && i < artist.size(); i++) {
             result.getTopArtists().put(artist.get(i).getArtist(), artist.get(i).getListen());
         }
-        LinkedList<User.Wrapped.PodcastListen> podcast = user.getWrapped().getTopPodcast();
+        LinkedList<User.Wrapped.PodcastListen> podcast = user.getWrapped().getTopEpisode();
         for (int i = 0; i < basecase && i < podcast.size(); i++) {
-            result.getTopPodcasts().put(podcast.get(i).getPodcast().getName(), podcast.get(i).getListen());
+            result.getTopEpisodes().put(podcast.get(i).getEpisode().getName(), podcast.get(i).getListen());
         }
         LinkedList<User.Wrapped.GenreListen> genre = user.getWrapped().getTopGenre();
         for (int i = 0; i < basecase && i < genre.size(); i++) {

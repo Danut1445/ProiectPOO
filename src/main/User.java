@@ -195,15 +195,15 @@ public class User implements Visitable {
         }
 
         static class PodcastListen implements Comparable<PodcastListen>{
-            private Podcast podcast;
+            private Episode episode;
             private int listen;
 
-            public Podcast getPodcast() {
-                return podcast;
+            public Episode getEpisode() {
+                return episode;
             }
 
-            public void setPodcast(Podcast podcast) {
-                this.podcast = podcast;
+            public void setEpisode(Episode episode) {
+                this.episode = episode;
             }
 
             public int getListen() {
@@ -217,7 +217,7 @@ public class User implements Visitable {
             @Override
             public int compareTo(PodcastListen o) {
                 if (this.listen == o.getListen()) {
-                    return this.podcast.getName().compareTo(o.getPodcast().getName());
+                    return this.episode.getName().compareTo(o.getEpisode().getName());
                 } else {
                     return o.listen - this.listen;
                 }
@@ -227,7 +227,7 @@ public class User implements Visitable {
         private LinkedList<ArtistListen> topArtist = new LinkedList<>();
         private LinkedList<AlbumListen> topAlbum = new LinkedList<>();
         private LinkedList<SongListen> topSong = new LinkedList<>();
-        private LinkedList<PodcastListen> topPodcast = new LinkedList<>();
+        private LinkedList<PodcastListen> topEpisode = new LinkedList<>();
         private LinkedList<GenreListen> topGenre = new LinkedList<>();
 
         public LinkedList<ArtistListen> getTopArtist() {
@@ -254,12 +254,12 @@ public class User implements Visitable {
             this.topSong = topSong;
         }
 
-        public LinkedList<PodcastListen> getTopPodcast() {
-            return topPodcast;
+        public LinkedList<PodcastListen> getTopEpisode() {
+            return topEpisode;
         }
 
-        public void setTopPodcast(LinkedList<PodcastListen> topPodcast) {
-            this.topPodcast = topPodcast;
+        public void setTopEpisode(LinkedList<PodcastListen> topEpisode) {
+            this.topEpisode = topEpisode;
         }
 
         public LinkedList<GenreListen> getTopGenre() {
@@ -538,6 +538,9 @@ public class User implements Visitable {
                         break;
                     }
                 }
+                if (searcheditems.size() >= nrmax) {
+                    break;
+                }
             }
         }
         result.setMessage("Search returned " + searcheditems.size() + " results");
@@ -691,7 +694,7 @@ public class User implements Visitable {
                 player.setCurrentObject(info.getCurrepisode());
             }
             Podcast currPod = (Podcast) selectedItem;
-            updateWrapped("podcast", currPod);
+            updateWrapped("podcast", currPod.getEpisodes().get(player.getCurrentObject()));
         }
         if (lastsearch.equals("album")) {
             int aux = ((Album) selectedItem).getSongs().size();
@@ -1237,7 +1240,7 @@ public class User implements Visitable {
             Song currSong = (Song) obj;
             for (int i = 0; i < wrapped.getTopSong().size(); i++) {
                 Song wrsg = wrapped.getTopSong().get(i).getSong();
-                if (wrsg.getArtist().equals(currSong.getArtist()) && wrsg.getName().equals(currSong.getName())) {
+                if (wrsg.getName().equals(currSong.getName())) {
                     exists = true;
                     int listens = wrapped.getTopSong().get(i).getListen();
                     wrapped.getTopSong().get(i).setListen(listens + 1);
@@ -1270,20 +1273,20 @@ public class User implements Visitable {
             return;
         }
         if (type.equals("podcast")) {
-            Podcast currPod = (Podcast) obj;
-            for (int i = 0; i < wrapped.getTopPodcast().size(); i++) {
-                Podcast wrpd = wrapped.getTopPodcast().get(i).getPodcast();
-                if (wrpd.getOwner().equals(currPod.getOwner()) && wrpd.getName().equals(currPod.getName())) {
+            Episode currPod = (Episode) obj;
+            for (int i = 0; i < wrapped.getTopEpisode().size(); i++) {
+                Episode wrpd = wrapped.getTopEpisode().get(i).getEpisode();
+                if (wrpd.getName().equals(currPod.getName())) {
                     exists = true;
-                    int listens = wrapped.getTopPodcast().get(i).getListen();
-                    wrapped.getTopPodcast().get(i).setListen(listens + 1);
+                    int listens = wrapped.getTopEpisode().get(i).getListen();
+                    wrapped.getTopEpisode().get(i).setListen(listens + 1);
                     break;
                 }
             }
             if (!exists) {
-                wrapped.getTopPodcast().addLast(new Wrapped.PodcastListen());
-                wrapped.getTopPodcast().getLast().setListen(1);
-                wrapped.getTopPodcast().getLast().setPodcast(currPod);
+                wrapped.getTopEpisode().addLast(new Wrapped.PodcastListen());
+                wrapped.getTopEpisode().getLast().setListen(1);
+                wrapped.getTopEpisode().getLast().setEpisode(currPod);
             }
             return;
         }
@@ -1329,7 +1332,7 @@ public class User implements Visitable {
         int tot = wrapped.getTopAlbum().size();
         tot += wrapped.getTopArtist().size();
         tot += wrapped.getTopGenre().size();
-        tot += wrapped.getTopPodcast().size();
+        tot += wrapped.getTopEpisode().size();
         tot += wrapped.getTopSong().size();
         if (tot == 0) {
             ResultSwitch res = new ResultSwitch(command);
@@ -1338,7 +1341,7 @@ public class User implements Visitable {
         }
         Collections.sort(wrapped.getTopAlbum());
         Collections.sort(wrapped.getTopArtist());
-        Collections.sort(wrapped.getTopPodcast());
+        Collections.sort(wrapped.getTopEpisode());
         Collections.sort(wrapped.getTopSong());
         Collections.sort(wrapped.getTopGenre());
         ResultWrappedUser result = new ResultWrappedUser(command, this);
