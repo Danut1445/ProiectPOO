@@ -397,6 +397,9 @@ public class User implements Visitable {
         player.setSource(null);
         player.setType("nothing");
         lastsearch = "nothing";
+        player.setAd(null);
+        player.setNextAd(0);
+        player.setAdrev(0);
         if (filters.get("tags") != null) {
             for (JsonNode tag : filters.get("tags")) {
                 tags.addLast(tag.asText());
@@ -691,6 +694,7 @@ public class User implements Visitable {
             updateWrapped("album", ((Song) selectedItem).getAlbum());
             Userbase.getInstance().addStats(((Song) selectedItem).getArtist(), (Song) selectedItem);
             Userbase.getInstance().updateArt((Song) selectedItem, this, ((Song) selectedItem).getArtist());
+            player.addSg((Song) selectedItem);
         }
         if (lastsearch.equals("playlist")) {
             int aux = ((Playlist) selectedItem).getSongs().size();
@@ -706,6 +710,7 @@ public class User implements Visitable {
             updateWrapped("album", currSong.getAlbum());
             Userbase.getInstance().addStats(currSong.getArtist(), currSong);
             Userbase.getInstance().updateArt(currSong, this, currSong.getArtist());
+            player.addSg(currSong);
         }
         if (lastsearch.equals("podcast")) {
             PodcastInfo info = containsPodcast(((Podcast) selectedItem).getName());
@@ -739,6 +744,7 @@ public class User implements Visitable {
             updateWrapped("album", currSong.getAlbum());
             Userbase.getInstance().addStats(currSong.getArtist(), currSong);
             Userbase.getInstance().updateArt(currSong, this, currSong.getArtist());
+            player.addSg(currSong);
         }
         player.setSource(selectedItem);
         player.setLasttimestamp(command.getTimestamp());

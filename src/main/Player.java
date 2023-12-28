@@ -122,17 +122,21 @@ public final class Player {
             int passedtime = command.getTimestamp() - lasttimestamp;
             if (timeremaining < command.getTimestamp() - lasttimestamp) {
                 passedtime -= timeremaining;
-                timeremaining = currFile.getDuration();
-                currUser.updateWrapped("song", currFile);
-                currUser.updateWrapped("album", ((Song) currFile).getAlbum());
-                currUser.updateWrapped("genre", ((Song) currFile).getGenre());
-                currUser.updateWrapped("artist", ((Song) currFile).getArtist());
-                Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
-                Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
-                addSg((Song) currFile);
+                lasttimestamp += timeremaining;
+                if (!type.equals("nothing")) {
+                    timeremaining = currFile.getDuration();
+                    currUser.updateWrapped("song", currFile);
+                    currUser.updateWrapped("album", ((Song) currFile).getAlbum());
+                    currUser.updateWrapped("genre", ((Song) currFile).getGenre());
+                    currUser.updateWrapped("artist", ((Song) currFile).getArtist());
+                    Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
+                    Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
+                    addSg((Song) currFile);
+                }
                 nextAd = 0;
             } else {
                 passedtime = 0;
+                lasttimestamp = command.getTimestamp();
                 timeremaining = timeremaining - (command.getTimestamp() - lasttimestamp);
             }
         }
@@ -663,14 +667,9 @@ public final class Player {
         }
     }
 
-    private int totalspent;
-
     public void loadAd(final int passedtime) {
         timeremaining = ad.getDuration();
         Userbase ub = Userbase.getInstance();
-//        System.out.println(adrev);
-//        totalspent += adrev;
-//        System.out.println("TOTAL PANA ACUM: " + totalspent + " " + currUser.getUsername());
         for (int i = 0; i < listSg.getSongs().size(); i++) {
             Song crSg = listSg.getSongs().get(i).getSong();
             for (int j = 0; j < ub.getArtistData().size(); j++) {
