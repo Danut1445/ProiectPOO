@@ -77,10 +77,10 @@ public final class Main {
         ArrayNode outputs = objectMapper.createArrayNode();
         LinkedList<Object> results = new LinkedList<Object>();
 
-//        System.out.println(filePathInput);
-//        if (!filePathInput.equals("test03_etapa3_wrapped_n_user_n_artist.json")) {
-//            return;
-//        }
+        System.out.println(filePathInput);
+        if (!filePathInput.equals("test05_etapa3_monetization_free.json")) {
+            return;
+        }
 
         Library librarySongs = Library.getInstance();
         librarySongs.setSongs(new LinkedList<Song>());
@@ -338,6 +338,15 @@ public final class Main {
                     continue;
                 }
                 results.addLast(currUser.cancelPremium(currComm));
+            }
+            if (currComm.getCommand().equals("adBreak")) {
+                if (!currUser.getUsername().equals(currComm.getUsername())) {
+                    ResultSwitch res = new ResultSwitch(currComm);
+                    res.setMessage("The username " + currComm.getUsername() + " doesn't exist.");
+                    results.addLast(res);
+                    continue;
+                }
+                results.addLast(currUser.adBreak(currComm));
             }
         }
         for (int i = 0; i < userbase.getUserbase().size(); i++) {

@@ -12,6 +12,10 @@ public final class Player {
     private AudioFiles currFile;
     private int currentObject;
     private User currUser;
+    private User.Premium listSg = new User.Premium();
+    private int nextAd;
+    private Song ad;
+    private double adrev;
 
     public User getCurrUser() {
         return currUser;
@@ -77,24 +81,80 @@ public final class Player {
         this.timeremaining = timeremaining;
     }
 
+    public User.Premium getListSg() {
+        return listSg;
+    }
+
+    public void setListSg(User.Premium listSg) {
+        this.listSg = listSg;
+    }
+
+    public int getNextAd() {
+        return nextAd;
+    }
+
+    public void setNextAd(int nextAd) {
+        this.nextAd = nextAd;
+    }
+
+    public Song getAd() {
+        return ad;
+    }
+
+    public void setAd(Song ad) {
+        this.ad = ad;
+    }
+
+    public double getAdrev() {
+        return adrev;
+    }
+
+    public void setAdrev(double adrev) {
+        this.adrev = adrev;
+    }
+
     /**
      * Updates the player to see what it is status in the given command timestamp
      * @param command
      */
     public void status(final Command command) {
+        if (nextAd == 2 && !pause) {
+            int passedtime = command.getTimestamp() - lasttimestamp;
+            if (timeremaining < command.getTimestamp() - lasttimestamp) {
+                passedtime -= timeremaining;
+                timeremaining = currFile.getDuration();
+                currUser.updateWrapped("song", currFile);
+                currUser.updateWrapped("album", ((Song) currFile).getAlbum());
+                currUser.updateWrapped("genre", ((Song) currFile).getGenre());
+                currUser.updateWrapped("artist", ((Song) currFile).getArtist());
+                Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
+                Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
+                addSg((Song) currFile);
+                nextAd = 0;
+            } else {
+                passedtime = 0;
+                timeremaining = timeremaining - (command.getTimestamp() - lasttimestamp);
+            }
+        }
         if (type.equals("song") && !pause) {
             int passedtime = command.getTimestamp() - lasttimestamp;
             if (repeat == 1) {
                 if (timeremaining < command.getTimestamp() - lasttimestamp) {
                     passedtime -= timeremaining;
                     repeat = 0;
-                    timeremaining = currFile.getDuration();
-                    currUser.updateWrapped("song", currFile);
-                    currUser.updateWrapped("album", ((Song) currFile).getAlbum());
-                    currUser.updateWrapped("genre", ((Song) currFile).getGenre());
-                    currUser.updateWrapped("artist", ((Song) currFile).getArtist());
-                    Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
-                    Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
+                    if (nextAd == 1) {
+                        loadAd(passedtime);
+                        passedtime -= ad.getDuration();
+                    } else {
+                        timeremaining = currFile.getDuration();
+                        currUser.updateWrapped("song", currFile);
+                        currUser.updateWrapped("album", ((Song) currFile).getAlbum());
+                        currUser.updateWrapped("genre", ((Song) currFile).getGenre());
+                        currUser.updateWrapped("artist", ((Song) currFile).getArtist());
+                        Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
+                        Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
+                        addSg((Song) currFile);
+                    }
                 } else {
                     passedtime = 0;
                     timeremaining = timeremaining - (command.getTimestamp() - lasttimestamp);
@@ -103,6 +163,9 @@ public final class Player {
             if (repeat == 0) {
                 if (timeremaining < passedtime) {
                     type = "nothing";
+                    if (nextAd == 1) {
+                        loadAd(passedtime);
+                    }
                 } else {
                     timeremaining = timeremaining - passedtime;
                 }
@@ -111,13 +174,19 @@ public final class Player {
                 while (passedtime > 0) {
                     if (passedtime >= timeremaining) {
                         passedtime -= timeremaining;
-                        timeremaining = currFile.getDuration();
-                        currUser.updateWrapped("song", currFile);
-                        currUser.updateWrapped("album", ((Song) currFile).getAlbum());
-                        currUser.updateWrapped("genre", ((Song) currFile).getGenre());
-                        currUser.updateWrapped("artist", ((Song) currFile).getArtist());
-                        Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
-                        Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
+                        if (nextAd == 1) {
+                            loadAd(passedtime);
+                            passedtime -= ad.getDuration();
+                        } else {
+                            timeremaining = currFile.getDuration();
+                            currUser.updateWrapped("song", currFile);
+                            currUser.updateWrapped("album", ((Song) currFile).getAlbum());
+                            currUser.updateWrapped("genre", ((Song) currFile).getGenre());
+                            currUser.updateWrapped("artist", ((Song) currFile).getArtist());
+                            Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
+                            Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
+                            addSg((Song) currFile);
+                        }
                     } else {
                         timeremaining -= passedtime;
                         passedtime = 0;
@@ -138,16 +207,25 @@ public final class Player {
                     currentObject++;
                     if (currentObject >= order.length) {
                         type = "nothing";
+                        if (nextAd == 1) {
+                            loadAd(passedTime);
+                        }
                         break;
                     }
                     currFile = ((Playlist) source).getSongs().get(order[currentObject]);
-                    timeremaining = (currFile).getDuration();
-                    currUser.updateWrapped("song", currFile);
-                    currUser.updateWrapped("album", ((Song) currFile).getAlbum());
-                    currUser.updateWrapped("genre", ((Song) currFile).getGenre());
-                    currUser.updateWrapped("artist", ((Song) currFile).getArtist());
-                    Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
-                    Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
+                    if (nextAd == 1) {
+                        loadAd(passedTime);
+                        passedTime -= ad.getDuration();
+                    } else {
+                        timeremaining = currFile.getDuration();
+                        currUser.updateWrapped("song", currFile);
+                        currUser.updateWrapped("album", ((Song) currFile).getAlbum());
+                        currUser.updateWrapped("genre", ((Song) currFile).getGenre());
+                        currUser.updateWrapped("artist", ((Song) currFile).getArtist());
+                        Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
+                        Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
+                        addSg((Song) currFile);
+                    }
                 }
             }
             if (repeat == 1) {
@@ -162,13 +240,19 @@ public final class Player {
                         currentObject = 0;
                     }
                     currFile = ((Playlist) source).getSongs().get(order[currentObject]);
-                    timeremaining = (currFile).getDuration();
-                    currUser.updateWrapped("song", currFile);
-                    currUser.updateWrapped("album", ((Song) currFile).getAlbum());
-                    currUser.updateWrapped("genre", ((Song) currFile).getGenre());
-                    currUser.updateWrapped("artist", ((Song) currFile).getArtist());
-                    Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
-                    Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
+                    if (nextAd == 1) {
+                        loadAd(passedTime);
+                        passedTime -= ad.getDuration();
+                    } else {
+                        timeremaining = currFile.getDuration();
+                        currUser.updateWrapped("song", currFile);
+                        currUser.updateWrapped("album", ((Song) currFile).getAlbum());
+                        currUser.updateWrapped("genre", ((Song) currFile).getGenre());
+                        currUser.updateWrapped("artist", ((Song) currFile).getArtist());
+                        Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
+                        Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
+                        addSg((Song) currFile);
+                    }
                 }
             }
             if (repeat == 2) {
@@ -178,13 +262,19 @@ public final class Player {
                         break;
                     }
                     passedTime = passedTime - timeremaining;
-                    timeremaining = currFile.getDuration();
-                    currUser.updateWrapped("song", currFile);
-                    currUser.updateWrapped("album", ((Song) currFile).getAlbum());
-                    currUser.updateWrapped("genre", ((Song) currFile).getGenre());
-                    currUser.updateWrapped("artist", ((Song) currFile).getArtist());
-                    Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
-                    Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
+                    if (nextAd == 1) {
+                        loadAd(passedTime);
+                        passedTime -= ad.getDuration();
+                    } else {
+                        timeremaining = currFile.getDuration();
+                        currUser.updateWrapped("song", currFile);
+                        currUser.updateWrapped("album", ((Song) currFile).getAlbum());
+                        currUser.updateWrapped("genre", ((Song) currFile).getGenre());
+                        currUser.updateWrapped("artist", ((Song) currFile).getArtist());
+                        Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
+                        Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
+                        addSg((Song) currFile);
+                    }
                 }
             }
         }
@@ -201,16 +291,25 @@ public final class Player {
                     currentObject++;
                     if (currentObject >= order.length) {
                         type = "nothing";
+                        if (nextAd == 1) {
+                            loadAd(passedTime);
+                        }
                         break;
                     }
                     currFile = ((Album) source).getSongs().get(order[currentObject]);
-                    timeremaining = (currFile).getDuration();
-                    currUser.updateWrapped("song", currFile);
-                    currUser.updateWrapped("album", ((Song) currFile).getAlbum());
-                    currUser.updateWrapped("genre", ((Song) currFile).getGenre());
-                    currUser.updateWrapped("artist", ((Song) currFile).getArtist());
-                    Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
-                    Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
+                    if (nextAd == 1) {
+                        loadAd(passedTime);
+                        passedTime -= ad.getDuration();
+                    } else {
+                        timeremaining = currFile.getDuration();
+                        currUser.updateWrapped("song", currFile);
+                        currUser.updateWrapped("album", ((Song) currFile).getAlbum());
+                        currUser.updateWrapped("genre", ((Song) currFile).getGenre());
+                        currUser.updateWrapped("artist", ((Song) currFile).getArtist());
+                        Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
+                        Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
+                        addSg((Song) currFile);
+                    }
                 }
             }
             if (repeat == 1) {
@@ -225,13 +324,19 @@ public final class Player {
                         currentObject = 0;
                     }
                     currFile = ((Album) source).getSongs().get(order[currentObject]);
-                    timeremaining = (currFile).getDuration();
-                    currUser.updateWrapped("song", currFile);
-                    currUser.updateWrapped("album", ((Song) currFile).getAlbum());
-                    currUser.updateWrapped("genre", ((Song) currFile).getGenre());
-                    currUser.updateWrapped("artist", ((Song) currFile).getArtist());
-                    Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
-                    Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
+                    if (nextAd == 1) {
+                        loadAd(passedTime);
+                        passedTime -= ad.getDuration();
+                    } else {
+                        timeremaining = currFile.getDuration();
+                        currUser.updateWrapped("song", currFile);
+                        currUser.updateWrapped("album", ((Song) currFile).getAlbum());
+                        currUser.updateWrapped("genre", ((Song) currFile).getGenre());
+                        currUser.updateWrapped("artist", ((Song) currFile).getArtist());
+                        Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
+                        Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
+                        addSg((Song) currFile);
+                    }
                 }
             }
             if (repeat == 2) {
@@ -241,13 +346,19 @@ public final class Player {
                         break;
                     }
                     passedTime = passedTime - timeremaining;
-                    timeremaining = currFile.getDuration();
-                    currUser.updateWrapped("song", currFile);
-                    currUser.updateWrapped("album", ((Song) currFile).getAlbum());
-                    currUser.updateWrapped("genre", ((Song) currFile).getGenre());
-                    currUser.updateWrapped("artist", ((Song) currFile).getArtist());
-                    Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
-                    Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
+                    if (nextAd == 1) {
+                        loadAd(passedTime);
+                        passedTime -= ad.getDuration();
+                    } else {
+                        timeremaining = currFile.getDuration();
+                        currUser.updateWrapped("song", currFile);
+                        currUser.updateWrapped("album", ((Song) currFile).getAlbum());
+                        currUser.updateWrapped("genre", ((Song) currFile).getGenre());
+                        currUser.updateWrapped("artist", ((Song) currFile).getArtist());
+                        Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
+                        Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
+                        addSg((Song) currFile);
+                    }
                 }
             }
         }
@@ -393,6 +504,7 @@ public final class Player {
                     currUser.updateWrapped("artist", ((Song) currFile).getArtist());
                     Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
                     Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
+                    addSg((Song) currFile);
                 }
             }
             if (type.equals("album")) {
@@ -407,6 +519,7 @@ public final class Player {
                     currUser.updateWrapped("artist", ((Song) currFile).getArtist());
                     Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
                     Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
+                    addSg((Song) currFile);
                 }
             }
         }
@@ -420,6 +533,7 @@ public final class Player {
                 currUser.updateWrapped("artist", ((Song) currFile).getArtist());
                 Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
                 Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
+                addSg((Song) currFile);
             }
             currentObject++;
             if (type.equals("podcast")) {
@@ -440,6 +554,7 @@ public final class Player {
                 currUser.updateWrapped("artist", ((Song) currFile).getArtist());
                 Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
                 Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
+                addSg((Song) currFile);
             }
             if (type.equals("album")) {
                 if (currentObject >= ((Album) source).getSongs().size()) {
@@ -453,6 +568,7 @@ public final class Player {
                 currUser.updateWrapped("artist", ((Song) currFile).getArtist());
                 Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
                 Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
+                addSg((Song) currFile);
             }
         }
         if (repeat == 2) {
@@ -464,6 +580,7 @@ public final class Player {
                 currUser.updateWrapped("artist", ((Song) currFile).getArtist());
                 Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
                 Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
+                addSg((Song) currFile);
             }
             if (type.equals("podcast")) {
                 currFile = ((Podcast) source).getEpisodes().get(currentObject);
@@ -478,6 +595,7 @@ public final class Player {
                 currUser.updateWrapped("artist", ((Song) currFile).getArtist());
                 Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
                 Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
+                addSg((Song) currFile);
             }
             if (type.equals("album")) {
                 currFile = ((Album) source).getSongs().get(order[currentObject]);
@@ -488,6 +606,7 @@ public final class Player {
                 currUser.updateWrapped("artist", ((Song) currFile).getArtist());
                 Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
                 Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
+                addSg((Song) currFile);
             }
         }
         if (type.equals("nothing")) {
@@ -512,6 +631,7 @@ public final class Player {
             currUser.updateWrapped("artist", ((Song) currFile).getArtist());
             Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
             Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
+            addSg((Song) currFile);
         } else {
             currentObject--;
             if (type.equals("podcast")) {
@@ -527,6 +647,7 @@ public final class Player {
                 currUser.updateWrapped("artist", ((Song) currFile).getArtist());
                 Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
                 Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
+                addSg((Song) currFile);
             }
             if (type.equals("album")) {
                 currFile = ((Album) source).getSongs().get(order[currentObject]);
@@ -537,7 +658,75 @@ public final class Player {
                 currUser.updateWrapped("artist", ((Song) currFile).getArtist());
                 Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
                 Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
+                addSg((Song) currFile);
             }
+        }
+    }
+
+    private int totalspent;
+
+    public void loadAd(final int passedtime) {
+        timeremaining = ad.getDuration();
+        Userbase ub = Userbase.getInstance();
+        System.out.println(adrev);
+        totalspent += adrev;
+        System.out.println("TOTAL PANA ACUM: " + totalspent + " " + currUser.getUsername());
+        for (int i = 0; i < listSg.getSongs().size(); i++) {
+            Song crSg = listSg.getSongs().get(i).getSong();
+            for (int j = 0; j < ub.getArtistData().size(); j++) {
+                Userbase.ArtistData artd = ub.getArtistData().get(j);
+                if (artd.getArtist().equals(crSg.getArtist())) {
+                    for (int k = 0; k < artd.getSongIncs().size(); k++) {
+                        String crname = artd.getSongIncs().get(k).getSong().getName();
+                        if (crname.equals(crSg.getName())) {
+                            double inc = artd.getSongIncs().get(k).getInc();
+                            inc += (adrev / listSg.getTotalls()) * listSg.getSongs().get(i).getListen();
+                            artd.getSongIncs().get(k).setInc(inc);
+                            break;
+                        }
+                    }
+                    double inc = artd.getSongrev();
+                    inc += (adrev / listSg.getTotalls()) * listSg.getSongs().get(i).getListen();
+                    artd.setSongrev(inc);
+                    break;
+                }
+            }
+        }
+        listSg.reserList();
+        nextAd = 2;
+        if (timeremaining < passedtime) {
+            if (!type.equals("nothing")) {
+                timeremaining = currFile.getDuration();
+                currUser.updateWrapped("song", currFile);
+                currUser.updateWrapped("album", ((Song) currFile).getAlbum());
+                currUser.updateWrapped("genre", ((Song) currFile).getGenre());
+                currUser.updateWrapped("artist", ((Song) currFile).getArtist());
+                Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
+                Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
+                addSg((Song) currFile);
+            }
+            nextAd = 0;
+        } else {
+            timeremaining = timeremaining - passedtime;
+        }
+    }
+
+    public void addSg(final Song sg) {
+        boolean exists = false;
+        listSg.setTotalls(listSg.getTotalls() + 1);
+        for (int i = 0; i < listSg.getSongs().size(); i++) {
+            Song wrsg = listSg.getSongs().get(i).getSong();
+            if (wrsg.getName().equals(sg.getName())) {
+                exists = true;
+                int listens = listSg.getSongs().get(i).getListen();
+                listSg.getSongs().get(i).setListen(listens + 1);
+                break;
+            }
+        }
+        if (!exists) {
+            listSg.getSongs().addLast(new User.Wrapped.SongListen());
+            listSg.getSongs().getLast().setListen(1);
+            listSg.getSongs().getLast().setSong(sg);
         }
     }
 

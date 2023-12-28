@@ -273,7 +273,7 @@ public class User implements Visitable {
 
     private Wrapped wrapped = new Wrapped();
 
-    class Premium {
+    static class Premium {
         private LinkedList<Wrapped.SongListen> songs = new LinkedList<>();
         private int totalls;
 
@@ -1024,6 +1024,11 @@ public class User implements Visitable {
         if (previousstatus.equals("podcast")) {
             info = containsPodcast(((Podcast) player.getSource()).getName());
         }
+        if (player.getNextAd() == 2) {
+            message = "Can not skip over an add";
+            resultForwardBackward.setMessage(message);
+            return  resultForwardBackward;
+        }
         if (player.getType().equals("nothing")) {
             message = "Please load a source before skipping to the next track.";
             resultForwardBackward.setMessage(message);
@@ -1057,6 +1062,11 @@ public class User implements Visitable {
             return resultForwardBackward;
         }
         updatePlayer(command);
+        if (player.getNextAd() == 2) {
+            message = "Can not skip over an add";
+            resultForwardBackward.setMessage(message);
+            return  resultForwardBackward;
+        }
         if (player.getType().equals("nothing")) {
             message = "Please load a source before returning to the previous track.";
             resultForwardBackward.setMessage(message);
@@ -1397,6 +1407,7 @@ public class User implements Visitable {
 
     public ResultSwitch buyPremium(final Command command) {
         ResultSwitch result = new ResultSwitch(command);
+        updatePlayer(command);
         if (type != 0) {
             result.setMessage(username + " is not a normal user.");
             return result;
@@ -1413,6 +1424,7 @@ public class User implements Visitable {
 
     public ResultSwitch cancelPremium(final Command command) {
         ResultSwitch result = new ResultSwitch(command);
+        updatePlayer(command);
         if (type != 0) {
             result.setMessage(username + " is not a normal user.");
             return result;
@@ -1446,6 +1458,26 @@ public class User implements Visitable {
         isPremium = false;
         result.setMessage(username + " cancelled the subscription successfully.");
         return result;
+    }
+
+    public ResultSwitch adBreak(final Command command) {
+        ResultSwitch res = new ResultSwitch(command);
+        updatePlayer(command);
+        if (player.getType().equals("nothing") || player.getType().equals("podcast")) {
+            res.setMessage(username + " is not playing any music.");
+            return res;
+        }
+        for (int i = 0; i < Library.getInstance().getSongs().size(); i++) {
+            Song crsg = Library.getInstance().getSongs().get(i);
+            if (crsg.getName().equals("Ad Break")) {
+                player.setAd(crsg);
+                player.setNextAd(1);
+                player.setAdrev(command.getPrice());
+                break;
+            }
+        }
+        res.setMessage("Ad inserted successfully.");
+        return res;
     }
 
     public final boolean isOffline() {
