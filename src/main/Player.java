@@ -668,9 +668,9 @@ public final class Player {
     public void loadAd(final int passedtime) {
         timeremaining = ad.getDuration();
         Userbase ub = Userbase.getInstance();
-        System.out.println(adrev);
-        totalspent += adrev;
-        System.out.println("TOTAL PANA ACUM: " + totalspent + " " + currUser.getUsername());
+//        System.out.println(adrev);
+//        totalspent += adrev;
+//        System.out.println("TOTAL PANA ACUM: " + totalspent + " " + currUser.getUsername());
         for (int i = 0; i < listSg.getSongs().size(); i++) {
             Song crSg = listSg.getSongs().get(i).getSong();
             for (int j = 0; j < ub.getArtistData().size(); j++) {
