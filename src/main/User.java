@@ -19,7 +19,7 @@ interface Visitable  {
 interface notifObserv {
     static class Notification {
         private String name;
-        private String message;
+        private String description;
 
         public String getName() {
             return name;
@@ -29,12 +29,12 @@ interface notifObserv {
             this.name = name;
         }
 
-        public String getMessage() {
-            return message;
+        public String getDescription() {
+            return description;
         }
 
-        public void setMessage(String message) {
-            this.message = message;
+        public void setDescription(String description) {
+            this.description = description;
         }
     }
     void addNotification(Notification Notific);
@@ -55,7 +55,7 @@ public class User implements Visitable, notifObserv{
     private LinkedList<Playlist> followed = new LinkedList<Playlist>();
     private String currentPage;
     private User currUserrPage;
-    private LinkedList<Notification> notifications;
+    private LinkedList<Notification> notifications = new LinkedList<>();
 
     class PodcastInfo {
         private String podcastname;
@@ -1198,7 +1198,8 @@ public class User implements Visitable, notifObserv{
             User usr = Userbase.getInstance().searchUser(((Playlist) selectedItem).getUser());
             if (usr != null) {
                 Notification notif = new Notification();
-                notif.setMessage(this.username + " unfollowed one of your playlists");
+                notif.setName("Unfollowed Playlist");
+                notif.setDescription(this.username + " unfollowed one of your playlists");
                 usr.addNotification(notif);
             }
         } else {
@@ -1208,7 +1209,8 @@ public class User implements Visitable, notifObserv{
             User usr = Userbase.getInstance().searchUser(((Playlist) selectedItem).getUser());
             if (usr != null) {
                 Notification notif = new Notification();
-                notif.setMessage(this.username + " started following one of your playlists");
+                notif.setName("Followed Playlist");
+                notif.setDescription(this.username + " started following one of your playlists");
                 usr.addNotification(notif);
             }
         }
@@ -1535,6 +1537,44 @@ public class User implements Visitable, notifObserv{
         return res;
     }
 
+    public ResultSwitch subscribe(final Command command) {
+        ResultSwitch result = new ResultSwitch(command);
+        if (isOffline()) {
+            result.setMessage("User is offline");
+            return result;
+        }
+        if (type != 0) {
+            result.setMessage(username + " is not a normal user");
+            return result;
+        }
+        if (!currentPage.equals("HostPage") && !currentPage.equals("ArtistPage")) {
+            result.setMessage("To subscribe you need to be on the page of an artist or host.");
+            return result;
+        }
+        if (currentPage.equals("ArtistPage")) {
+            Artist art = (Artist) currUserrPage;
+            int index = art.searchSubscr(this.username);
+            if (index != -1) {
+                art.getSubscribers().remove(index);
+                result.setMessage(username + " unsubscribed from " + art.getUsername() + " successfully.");
+                return result;
+            }
+            art.getSubscribers().addLast(this);
+            result.setMessage(username + " subscribed to " + art.getUsername() + " successfully.");
+            return result;
+        }
+        Host host = (Host) currUserrPage;
+        int index = host.searchSubscr(this.username);
+        if (index != -1) {
+            host.getSubscribers().remove(index);
+            result.setMessage(username + " unsubscribed from " +host.getUsername() + " successfully.");
+            return result;
+        }
+        host.getSubscribers().addLast(this);
+        result.setMessage(username + " subscribed to " + host.getUsername() + " successfully.");
+        return result;
+    }
+
     public final boolean isOffline() {
         return offline;
     }
@@ -1671,7 +1711,7 @@ public class User implements Visitable, notifObserv{
 final class Artist extends User {
     private LinkedList<Album> albums = new LinkedList<Album>();
     private int nrLikes;
-    private LinkedList<User> subscribers;
+    private LinkedList<User> subscribers = new LinkedList<>();
 
     class Event {
         private String eventname;
@@ -1911,6 +1951,12 @@ final class Artist extends User {
         newEvent.setEventdescription(command.getDescription());
         events.addLast(newEvent);
         result.setMessage(this.getUsername() + " has added new event successfully.");
+        for (int i = 0; i < subscribers.size(); i++) {
+            Notification notif = new Notification();
+            notif.setName("New Event");
+            notif.setDescription("New Event from " + this.getUsername() + ".");
+            subscribers.get(i).addNotification(notif);
+        }
         return result;
     }
 
@@ -1955,6 +2001,12 @@ final class Artist extends User {
         newMerch.setMerchprice(command.getPrice());
         merch.addLast(newMerch);
         result.setMessage(this.getUsername() + " has added new merchandise successfully.");
+        for (int i = 0; i < subscribers.size(); i++) {
+            Notification notif = new Notification();
+            notif.setName("New Merchandise");
+            notif.setDescription("New Merchandise from " + this.getUsername() + ".");
+            subscribers.get(i).addNotification(notif);
+        }
         return result;
     }
 
@@ -2032,6 +2084,14 @@ final class Artist extends User {
         return result;
     }
 
+    public int searchSubscr(final String name) {
+        for (int i = 0; i < subscribers.size(); i++) {
+            if (subscribers.get(i).getUsername().equals(name)) {
+                return i;
+            }
+        }
+        return -1;
+    }
 
     public LinkedList<Album> getAlbums() {
         return albums;
@@ -2072,11 +2132,19 @@ final class Artist extends User {
     public void setWrappedartist(Wrapped wrappedartist) {
         this.wrappedartist = wrappedartist;
     }
+
+    public LinkedList<User> getSubscribers() {
+        return subscribers;
+    }
+
+    public void setSubscribers(LinkedList<User> subscribers) {
+        this.subscribers = subscribers;
+    }
 }
 
 final class Host extends User {
     private LinkedList<Podcast> podcasts = new LinkedList<Podcast>();
-    private LinkedList<User> subscribers;
+    private LinkedList<User> subscribers = new LinkedList<>();
 
     class Announcement {
         private String annName;
@@ -2136,6 +2204,12 @@ final class Host extends User {
         newAnn.setAnnName(command.getName());
         announcements.addLast(newAnn);
         result.setMessage(this.getUsername() + " has successfully added new announcement.");
+        for (int i = 0; i < subscribers.size(); i++) {
+            Notification notif = new Notification();
+            notif.setName("New Announcement");
+            notif.setDescription("New Announcement from " + this.getUsername() + ".");
+            subscribers.get(i).addNotification(notif);
+        }
         return result;
     }
 
@@ -2158,6 +2232,16 @@ final class Host extends User {
         result.setMessage(this.getUsername() + " has no announcement with the given name.");
         return result;
     }
+
+    public int searchSubscr(final String name) {
+        for (int i = 0; i < subscribers.size(); i++) {
+            if (subscribers.get(i).getUsername().equals(name)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     public LinkedList<Podcast> getPodcasts() {
         return podcasts;
     }
@@ -2172,5 +2256,13 @@ final class Host extends User {
 
     public void setAnnouncements(final LinkedList<Announcement> announcements) {
         this.announcements = announcements;
+    }
+
+    public LinkedList<User> getSubscribers() {
+        return subscribers;
+    }
+
+    public void setSubscribers(LinkedList<User> subscribers) {
+        this.subscribers = subscribers;
     }
 }

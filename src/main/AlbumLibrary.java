@@ -59,6 +59,13 @@ public final class AlbumLibrary {
         albums.addLast(newAlbum);
         ((Artist) currUser).getAlbums().addLast(newAlbum);
         result.setMessage(currUser.getUsername() + " has added new album successfully.");
+        Artist ht = (Artist) currUser;
+        for (int i = 0; i < ht.getSubscribers().size(); i++) {
+            notifObserv.Notification notif = new notifObserv.Notification();
+            notif.setName("New Album");
+            notif.setDescription("New Album from " + ht.getUsername() + ".");
+            ht.getSubscribers().get(i).addNotification(notif);
+        }
         return result;
     }
 

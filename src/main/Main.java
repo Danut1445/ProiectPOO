@@ -348,6 +348,18 @@ public final class Main {
                 }
                 results.addLast(currUser.adBreak(currComm));
             }
+            if (currComm.getCommand().equals("subscribe")) {
+                if (!currUser.getUsername().equals(currComm.getUsername())) {
+                    ResultSwitch res = new ResultSwitch(currComm);
+                    res.setMessage("The username " + currComm.getUsername() + " doesn't exist.");
+                    results.addLast(res);
+                    continue;
+                }
+                results.addLast(currUser.subscribe(currComm));
+            }
+            if (currComm.getCommand().equals("getNotifications")) {
+                results.addLast(currUser.getNotif(currComm));
+            }
         }
         for (int i = 0; i < userbase.getUserbase().size(); i++) {
             userbase.getUserbase().get(i).cancelPremium(commands.getLast());

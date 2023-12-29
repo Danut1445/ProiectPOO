@@ -229,6 +229,10 @@ public final class Userbase {
      */
     public ResultSwitch deleteUser(final Command command, final User user) {
         ResultSwitch result = new ResultSwitch(command);
+        if (user.isPremium) {
+            result.setMessage(user.getUsername() + " can't be deleted.");
+            return result;
+        }
         for (int i = 0; i < userbase.size(); i++) {
             User currUser = userbase.get(i);
             currUser.updatePlayer(command);
