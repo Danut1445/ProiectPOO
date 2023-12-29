@@ -378,6 +378,8 @@ public final class Player {
                     repeat = 0;
                     currFile = ((Podcast) source).getEpisodes().get(currentObject);
                     timeremaining = (currFile).getDuration();
+                    currUser.updateWrapped("episode", currFile);
+                    Userbase.getInstance().updateHost((Episode) currFile, currUser,((Podcast) source).getOwner());
                     break;
                 }
             }
@@ -395,6 +397,8 @@ public final class Player {
                     }
                     currFile = ((Podcast) source).getEpisodes().get(currentObject);
                     timeremaining = (currFile).getDuration();
+                    currUser.updateWrapped("episode", currFile);
+                    Userbase.getInstance().updateHost((Episode) currFile, currUser,((Podcast) source).getOwner());
                 }
             }
             if (repeat == 2) {
@@ -406,6 +410,8 @@ public final class Player {
                     passedTime = passedTime - timeremaining;
                     currFile = ((Podcast) source).getEpisodes().get(currentObject);
                     timeremaining = (currFile).getDuration();
+                    currUser.updateWrapped("episode", currFile);
+                    Userbase.getInstance().updateHost((Episode) currFile, currUser,((Podcast) source).getOwner());
                 }
             }
         }
@@ -435,6 +441,8 @@ public final class Player {
               } else {
                   currFile = ((Podcast) source).getEpisodes().get(currentObject);
                   timeremaining = currFile.getDuration();
+                  currUser.updateWrapped("episode", currFile);
+                  Userbase.getInstance().updateHost((Episode) currFile, currUser,((Podcast) source).getOwner());
               }
             }
         }
@@ -444,6 +452,8 @@ public final class Player {
             } else {
                 repeat = 0;
                 timeremaining = currFile.getDuration();
+                currUser.updateWrapped("episode", currFile);
+                Userbase.getInstance().updateHost((Episode) currFile, currUser,((Podcast) source).getOwner());
             }
         }
         if (repeat == 2) {
@@ -451,6 +461,8 @@ public final class Player {
                 timeremaining -= timetomove;
             } else {
                 timeremaining = currFile.getDuration();
+                currUser.updateWrapped("episode", currFile);
+                Userbase.getInstance().updateHost((Episode) currFile, currUser,((Podcast) source).getOwner());
             }
         }
         if (type.equals("nothing")) {
@@ -494,6 +506,8 @@ public final class Player {
                 } else {
                     currFile = ((Podcast) source).getEpisodes().get(currentObject);
                     timeremaining = currFile.getDuration();
+                    currUser.updateWrapped("episode", currFile);
+                    Userbase.getInstance().updateHost((Episode) currFile, currUser,((Podcast) source).getOwner());
                 }
             }
             if (type.equals("playlist")) {
@@ -545,6 +559,8 @@ public final class Player {
                 repeat = 0;
                 currFile = ((Podcast) source).getEpisodes().get(currentObject);
                 timeremaining = currFile.getDuration();
+                currUser.updateWrapped("episode", currFile);
+                Userbase.getInstance().updateHost((Episode) currFile, currUser,((Podcast) source).getOwner());
             }
             if (type.equals("playlist")) {
                 if (currentObject >= ((Playlist) source).getSongs().size()) {
@@ -589,6 +605,8 @@ public final class Player {
             if (type.equals("podcast")) {
                 currFile = ((Podcast) source).getEpisodes().get(currentObject);
                 timeremaining = currFile.getDuration();
+                currUser.updateWrapped("episode", currFile);
+                Userbase.getInstance().updateHost((Episode) currFile, currUser,((Podcast) source).getOwner());
             }
             if (type.equals("playlist")) {
                 currFile = ((Playlist) source).getSongs().get(order[currentObject]);
@@ -641,6 +659,8 @@ public final class Player {
             if (type.equals("podcast")) {
                 currFile = ((Podcast) source).getEpisodes().get(currentObject);
                 timeremaining = currFile.getDuration();
+                currUser.updateWrapped("episode", currFile);
+                Userbase.getInstance().updateHost((Episode) currFile, currUser,((Podcast) source).getOwner());
             }
             if (type.equals("playlist")) {
                 currFile = ((Playlist) source).getSongs().get(order[currentObject]);

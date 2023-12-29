@@ -128,6 +128,16 @@ public final class Userbase {
         }
     }
 
+    public int searchStat(final String name) {
+        for (int i = 0; i < artistData.size(); i++) {
+            if (artistData.get(i).getArtist().equals(name)) {
+                return i;
+            }
+        }
+        artistData.addLast(new ArtistData());
+        artistData.getLast().setArtist(name);
+        return artistData.size() - 1;
+    }
     /**
      * Function that gets the current usernames of all online
      * users and returns them
@@ -407,6 +417,16 @@ public final class Userbase {
         for (int i = 0; i < userbase.size(); i++) {
             if (userbase.get(i).getType() == 1 && userbase.get(i).getUsername().equals(artist)) {
                 ((Artist) userbase.get(i)).updateWrapped(currUser, currSong);
+                break;
+            }
+        }
+    }
+
+    public void updateHost(final Episode currEpisode, final User currUser, final String artist)
+    {
+        for (int i = 0; i < userbase.size(); i++) {
+            if (userbase.get(i).getType() == 2 && userbase.get(i).getUsername().equals(artist)) {
+                ((Host) userbase.get(i)).updateWrapped(currEpisode, currUser);
                 break;
             }
         }

@@ -326,6 +326,7 @@ public class User implements Visitable, notifObserv{
 
     final Premium premium = new Premium();
     boolean isPremium = false;
+    LinkedList<String> mymerch = new LinkedList<>();
 
     public User(final UserInput user) {
         this.age = user.getAge();
@@ -753,7 +754,9 @@ public class User implements Visitable, notifObserv{
                 player.setCurrentObject(info.getCurrepisode());
             }
             Podcast currPod = (Podcast) selectedItem;
-            updateWrapped("podcast", currPod.getEpisodes().get(player.getCurrentObject()));
+            updateWrapped("episode", currPod.getEpisodes().get(player.getCurrentObject()));
+            Episode aux = currPod.getEpisodes().get(player.getCurrentObject());
+            Userbase.getInstance().updateHost(aux, this, currPod.getOwner());
         }
         if (lastsearch.equals("album")) {
             int aux = ((Album) selectedItem).getSongs().size();
@@ -1374,7 +1377,7 @@ public class User implements Visitable, notifObserv{
             }
             return;
         }
-        if (type.equals("podcast")) {
+        if (type.equals("episode")) {
             Episode currPod = (Episode) obj;
             for (int i = 0; i < wrapped.getTopEpisode().size(); i++) {
                 Episode wrpd = wrapped.getTopEpisode().get(i).getEpisode();
@@ -1572,6 +1575,40 @@ public class User implements Visitable, notifObserv{
         }
         host.getSubscribers().addLast(this);
         result.setMessage(username + " subscribed to " + host.getUsername() + " successfully.");
+        return result;
+    }
+
+    public ResultSwitch buyMerch(final Command command) {
+        ResultSwitch result = new ResultSwitch(command);
+        if (!currentPage.equals("ArtistPage")) {
+            result.setMessage("Cannot buy merch from this page.");
+            return result;
+        }
+        boolean found = false;
+        double price = 0;
+        Artist art = (Artist) currUserrPage;
+        for (int i = 0; i < art.getMerch().size(); i++) {
+            if (art.getMerch().get(i).getMerchname().equals(command.getName())) {
+                mymerch.addLast(command.getName());
+                found = true;
+                price = art.getMerch().get(i).getMerchprice();
+                break;
+            }
+        }
+        if (!found) {
+            result.setMessage("The merch " + command.getName() + " doesn't exist.");
+            return result;
+        }
+        int index = Userbase.getInstance().searchStat(currUserrPage.getUsername());
+        price += Userbase.getInstance().getArtistData().get(index).getMerchrev();
+        Userbase.getInstance().getArtistData().get(index).setMerchrev(price);
+        result.setMessage(username + " has added new merch successfully.");
+        return result;
+    }
+
+    public ResultMerch seeMerch(final Command command) {
+        ResultMerch result = new ResultMerch(command);
+        result.setResult(mymerch);
         return result;
     }
 
@@ -2169,6 +2206,58 @@ final class Host extends User {
 
     private LinkedList<Announcement> announcements = new LinkedList<Announcement>();
 
+    class WrappedHost {
+        static class EpisodeListen implements Comparable<EpisodeListen>{
+            private String episode;
+            private int listen;
+
+            public String getEpisode() {
+                return episode;
+            }
+
+            public void setEpisode(String episode) {
+                this.episode = episode;
+            }
+
+            public int getListen() {
+                return listen;
+            }
+
+            public void setListen(int listen) {
+                this.listen = listen;
+            }
+
+            @Override
+            public int compareTo(EpisodeListen o) {
+                if (o.getListen() == listen) {
+                    return -(o.getEpisode().compareTo(episode));
+                } else {
+                    return o.getListen() - listen;
+                }
+            }
+        }
+        private LinkedList<EpisodeListen> episodes = new LinkedList<>();
+        private LinkedList<String> users =  new LinkedList<>();
+
+        public LinkedList<EpisodeListen> getEpisodes() {
+            return episodes;
+        }
+
+        public void setEpisodes(LinkedList<EpisodeListen> episodes) {
+            this.episodes = episodes;
+        }
+
+        public LinkedList<String> getUsers() {
+            return users;
+        }
+
+        public void setUsers(LinkedList<String> users) {
+            this.users = users;
+        }
+    }
+
+    private WrappedHost wrapped = new WrappedHost();
+
     Host(final Command command) {
         super(command);
         this.setType(2);
@@ -2242,6 +2331,42 @@ final class Host extends User {
         return -1;
     }
 
+    public void updateWrapped(final Episode episode, final User user) {
+        String name = episode.getName();
+        boolean found = false;
+        for (int i = 0; i < wrapped.getEpisodes().size(); i++) {
+            WrappedHost.EpisodeListen epis = wrapped.getEpisodes().get(i);
+            if (epis.getEpisode().equals(name)) {
+                found = true;
+                epis.setListen(epis.getListen() + 1);
+                break;
+            }
+        }
+        if (!found) {
+            WrappedHost.EpisodeListen epis = new WrappedHost.EpisodeListen();
+            epis.setEpisode(name);
+            epis.setListen(1);
+            wrapped.getEpisodes().addLast(epis);
+        }
+        found = false;
+        name = user.getUsername();
+        for (int i = 0; i < wrapped.getUsers().size(); i++) {
+            if (wrapped.getUsers().get(i).equals(name)) {
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            wrapped.getUsers().addLast(name);
+        }
+    }
+
+    public ResultWrappedHost printWrappedHost(final Command command) {
+        Collections.sort(wrapped.getEpisodes());
+        ResultWrappedHost result = new ResultWrappedHost(command, this);
+        return result;
+    }
+
     public LinkedList<Podcast> getPodcasts() {
         return podcasts;
     }
@@ -2264,5 +2389,13 @@ final class Host extends User {
 
     public void setSubscribers(LinkedList<User> subscribers) {
         this.subscribers = subscribers;
+    }
+
+    public WrappedHost getWrappedHost() {
+        return wrapped;
+    }
+
+    public void setWrappedHost(WrappedHost wrapped) {
+        this.wrapped = wrapped;
     }
 }

@@ -78,7 +78,7 @@ public final class Main {
         LinkedList<Object> results = new LinkedList<Object>();
 
 //        System.out.println(filePathInput);
-//        if (!filePathInput.equals("test05_etapa3_monetization_free.json")) {
+//        if (!filePathInput.equals("test09_etapa3_merch_buy.json")) {
 //            return;
 //        }
 
@@ -320,6 +320,9 @@ public final class Main {
                 if (currUser.getType() == 1) {
                     results.addLast(((Artist) currUser).wrappedArt(currComm));
                 }
+                if (currUser.getType() == 2) {
+                    results.addLast(((Host) currUser).printWrappedHost(currComm));
+                }
             }
             if (currComm.getCommand().equals("buyPremium")) {
                 if (!currUser.getUsername().equals(currComm.getUsername())) {
@@ -359,6 +362,18 @@ public final class Main {
             }
             if (currComm.getCommand().equals("getNotifications")) {
                 results.addLast(currUser.getNotif(currComm));
+            }
+            if (currComm.getCommand().equals("buyMerch")) {
+                if (!currUser.getUsername().equals(currComm.getUsername())) {
+                    ResultSwitch res = new ResultSwitch(currComm);
+                    res.setMessage("The username " + currComm.getUsername() + " doesn't exist.");
+                    results.addLast(res);
+                    continue;
+                }
+                results.addLast(currUser.buyMerch(currComm));
+            }
+            if (currComm.getCommand().equals("seeMerch")) {
+                results.addLast(currUser.seeMerch(currComm));
             }
         }
         for (int i = 0; i < userbase.getUserbase().size(); i++) {

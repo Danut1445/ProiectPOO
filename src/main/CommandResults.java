@@ -644,6 +644,50 @@ class ResultWrappedArt extends CommandResults {
     }
 }
 
+class ResultWrappedHost extends CommandResults {
+    final ObjectMapper mapper = new ObjectMapper();
+    class Result {
+        private ObjectNode topEpisodes = mapper.createObjectNode();
+        private int listeners;
+
+        public ObjectNode getTopEpisodes() {
+            return topEpisodes;
+        }
+
+        public void setTopEpisodes(ObjectNode topEpisodes) {
+            this.topEpisodes = topEpisodes;
+        }
+
+        public int getListeners() {
+            return listeners;
+        }
+
+        public void setListeners(int listeners) {
+            this.listeners = listeners;
+        }
+    }
+
+    Result result = new Result();
+
+    ResultWrappedHost(final Command command, final Host host) {
+        super(command);
+        final int basecase = 5;
+        LinkedList<Host.WrappedHost.EpisodeListen> episodes = host.getWrappedHost().getEpisodes();
+        for (int i = 0; i < episodes.size() && i < basecase; i++) {
+            result.getTopEpisodes().put(episodes.get(i).getEpisode(), episodes.get(i).getListen());
+        }
+        result.setListeners(host.getWrappedHost().getUsers().size());
+    }
+
+    public Result getResult() {
+        return result;
+    }
+
+    public void setResult(Result result) {
+        this.result = result;
+    }
+}
+
 class ResultEnd {
     private final String command = "endProgram";
     private final ObjectMapper mapper = new ObjectMapper();
@@ -665,10 +709,14 @@ class ResultEnd {
             finalRes.put("songRevenue",inc);
             finalRes.put("ranking", i + 1);
             Collections.sort(currArt.getSongIncs());
-            if (currArt.getSongIncs().get(0).getInc() != 0) {
-                finalRes.put("mostProfitableSong",currArt.getSongIncs().get(0).getSong().getName());
-            } else {
+            if (currArt.getSongIncs().isEmpty()) {
                 finalRes.put("mostProfitableSong","N/A");
+            } else {
+                if (currArt.getSongIncs().get(0).getInc() != 0) {
+                    finalRes.put("mostProfitableSong", currArt.getSongIncs().get(0).getSong().getName());
+                } else {
+                    finalRes.put("mostProfitableSong", "N/A");
+                }
             }
             result.put(currArt.getArtist(), finalRes);
         }
@@ -699,5 +747,20 @@ class ResultNotification extends CommandResults {
 
     public void setNotifications(LinkedList<notifObserv.Notification> notifications) {
         this.notifications = notifications;
+    }
+}
+
+class ResultMerch extends  CommandResults {
+    LinkedList<String> result;
+    ResultMerch(final Command command) {
+        super(command);
+    }
+
+    public LinkedList<String> getResult() {
+        return result;
+    }
+
+    public void setResult(LinkedList<String> result) {
+        this.result = result;
     }
 }
