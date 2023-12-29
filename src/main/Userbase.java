@@ -408,6 +408,15 @@ public final class Userbase {
         }
     }
 
+    public User searchUser(final String name) {
+        for (int i = 0; i < userbase.size(); i++) {
+            if (userbase.get(i).getUsername().equals(name)) {
+                return userbase.get(i);
+            }
+        }
+        return null;
+    }
+
     public LinkedList<User> getUserbase() {
         return userbase;
     }

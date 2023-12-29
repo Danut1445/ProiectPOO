@@ -16,7 +16,31 @@ interface Visitable  {
     ResultSwitch currentPage(Visitor v, Command command);
 }
 
-public class User implements Visitable {
+interface notifObserv {
+    static class Notification {
+        private String name;
+        private String message;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public void setMessage(String message) {
+            this.message = message;
+        }
+    }
+    void addNotification(Notification Notific);
+}
+
+public class User implements Visitable, notifObserv{
     private String username;
     private int age;
     private String city;
@@ -31,6 +55,7 @@ public class User implements Visitable {
     private LinkedList<Playlist> followed = new LinkedList<Playlist>();
     private String currentPage;
     private User currUserrPage;
+    private LinkedList<Notification> notifications;
 
     class PodcastInfo {
         private String podcastname;
@@ -1170,10 +1195,22 @@ public class User implements Visitable {
             resultFollow.setMessage("Playlist unfollowed successfully.");
             ((Playlist) selectedItem).setFollowers(((Playlist) selectedItem).getFollowers() - 1);
             followed.remove((Playlist) selectedItem);
+            User usr = Userbase.getInstance().searchUser(((Playlist) selectedItem).getUser());
+            if (usr != null) {
+                Notification notif = new Notification();
+                notif.setMessage(this.username + " unfollowed one of your playlists");
+                usr.addNotification(notif);
+            }
         } else {
             resultFollow.setMessage("Playlist followed successfully.");
             ((Playlist) selectedItem).setFollowers(((Playlist) selectedItem).getFollowers() + 1);
             followed.addLast((Playlist) selectedItem);
+            User usr = Userbase.getInstance().searchUser(((Playlist) selectedItem).getUser());
+            if (usr != null) {
+                Notification notif = new Notification();
+                notif.setMessage(this.username + " started following one of your playlists");
+                usr.addNotification(notif);
+            }
         }
         return resultFollow;
     }
@@ -1486,6 +1523,18 @@ public class User implements Visitable {
         return res;
     }
 
+    @Override
+    public void addNotification(Notification Notific) {
+        notifications.addLast(Notific);
+    }
+
+    public ResultNotification getNotif(final Command command) {
+        ResultNotification res = new ResultNotification(command);
+        res.setNotifications(notifications);
+        notifications = new LinkedList<>();
+        return res;
+    }
+
     public final boolean isOffline() {
         return offline;
     }
@@ -1622,6 +1671,7 @@ public class User implements Visitable {
 final class Artist extends User {
     private LinkedList<Album> albums = new LinkedList<Album>();
     private int nrLikes;
+    private LinkedList<User> subscribers;
 
     class Event {
         private String eventname;
@@ -1982,6 +2032,7 @@ final class Artist extends User {
         return result;
     }
 
+
     public LinkedList<Album> getAlbums() {
         return albums;
     }
@@ -2025,6 +2076,7 @@ final class Artist extends User {
 
 final class Host extends User {
     private LinkedList<Podcast> podcasts = new LinkedList<Podcast>();
+    private LinkedList<User> subscribers;
 
     class Announcement {
         private String annName;

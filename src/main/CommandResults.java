@@ -686,3 +686,18 @@ class ResultEnd {
         this.result = result;
     }
 }
+
+class ResultNotification extends CommandResults {
+    LinkedList<notifObserv.Notification> notifications;
+    ResultNotification(final Command command) {
+        super(command);
+    }
+
+    public LinkedList<notifObserv.Notification> getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(LinkedList<notifObserv.Notification> notifications) {
+        this.notifications = notifications;
+    }
+}
