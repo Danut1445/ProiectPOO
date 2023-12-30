@@ -732,6 +732,9 @@ public final class Player {
 
     public void addSg(final Song sg) {
         boolean exists = false;
+        if (currUser.isPremium) {
+            return;
+        }
         listSg.setTotalls(listSg.getTotalls() + 1);
         for (int i = 0; i < listSg.getSongs().size(); i++) {
             Song wrsg = listSg.getSongs().get(i).getSong();

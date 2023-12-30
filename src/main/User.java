@@ -444,6 +444,72 @@ public class User implements Visitable, notifObserv{
 
     PageHistory pageHistory = new PageHistory();
 
+    class TopGenres {
+        class GenreLike implements Comparable<GenreLike>{
+            private String genre;
+            private int likes;
+
+            public String getGenre() {
+                return genre;
+            }
+
+            public void setGenre(String genre) {
+                this.genre = genre;
+            }
+
+            public int getLikes() {
+                return likes;
+            }
+
+            public void setLikes(int likes) {
+                this.likes = likes;
+            }
+
+            @Override
+            public int compareTo(GenreLike o) {
+                if (o.getLikes() == likes) {
+                    return -(o.getGenre().compareTo(genre));
+                } else {
+                    return o.getLikes() - likes;
+                }
+            }
+        }
+
+        private LinkedList<GenreLike> genres = new LinkedList<>();
+
+        public void addGenre(final String name) {
+            boolean found = false;
+            for (int i = 0; i < genres.size(); i++) {
+                if (genres.get(i).genre.equals(name)) {
+                    found = true;
+                    int likes = genres.get(i).getLikes();
+                    genres.get(i).setLikes(likes + 1);
+                    break;
+                }
+            }
+            if (!found) {
+                genres.addLast(new GenreLike());
+                genres.getLast().setGenre(name);
+                genres.getLast().setLikes(1);
+            }
+        }
+
+        public LinkedList<GenreLike> getGenres() {
+            return genres;
+        }
+
+        public void setGenres(LinkedList<GenreLike> genres) {
+            this.genres = genres;
+        }
+    }
+
+    TopGenres topGenres = new TopGenres();
+    private LinkedList<Song> genre1 = new LinkedList<>();
+    private LinkedList<Song> genre2 = new LinkedList<>();
+    private LinkedList<Song> genre3 = new LinkedList<>();
+    private LinkedList<Song> recSongs = new LinkedList<>();
+    private LinkedList<Playlist> recPlaylist = new LinkedList<>();
+
     public User(final UserInput user) {
         this.age = user.getAge();
         this.city = user.getCity();
@@ -1800,6 +1866,45 @@ public class User implements Visitable, notifObserv{
         return result;
     }
 
+    public void updateTopGenres() {
+        topGenres.setGenres(new LinkedList<>());
+        for (int i = 0; i < preferedSongs.size(); i++) {
+            topGenres.addGenre(preferedSongs.get(i).getGenre());
+        }
+        for (int i = 0; i < followed.size(); i++) {
+            Playlist play = followed.get(i);
+            for (int j = 0; j < play.getSongs().size(); j++) {
+                topGenres.addGenre(play.getSongs().get(j).getGenre());
+            }
+        }
+        for (int i = 0; i < playlists.size(); i++) {
+            Playlist play = playlists.get(i);
+            for (int j = 0; j < play.getSongs().size(); j++) {
+                topGenres.addGenre(play.getSongs().get(j).getGenre());
+            }
+        }
+        Collections.sort(topGenres.genres);
+        genre1 = new LinkedList<>();
+        genre2 = new LinkedList<>();
+        genre3 = new LinkedList<>();
+        Library lb = Library.getInstance();
+        for (int i = 0; i < lb.getSongs().size(); i++) {
+            Song sg = lb.getSongs().get(i);
+            if (sg.getGenre().equals(topGenres.genres.get(0).getGenre())) {
+                genre1.addLast(sg);
+            }
+            if (sg.getGenre().equals(topGenres.genres.get(1).getGenre())) {
+                genre2.addLast(sg);
+            }
+            if (sg.getGenre().equals(topGenres.genres.get(2).getGenre())) {
+                genre3.addLast(sg);
+            }
+        }
+        Collections.sort(genre1);
+        Collections.sort(genre2);
+        Collections.sort(genre3);
+    }
+
     public final boolean isOffline() {
         return offline;
     }
@@ -1930,6 +2035,50 @@ public class User implements Visitable, notifObserv{
 
     public void setWrapped(Wrapped wrapped) {
         this.wrapped = wrapped;
+    }
+
+    public LinkedList<Notification> getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(LinkedList<Notification> notifications) {
+        this.notifications = notifications;
+    }
+
+    public Premium getPremium() {
+        return premium;
+    }
+
+    public boolean isPremium() {
+        return isPremium;
+    }
+
+    public void setPremium(boolean premium) {
+        isPremium = premium;
+    }
+
+    public LinkedList<String> getMymerch() {
+        return mymerch;
+    }
+
+    public void setMymerch(LinkedList<String> mymerch) {
+        this.mymerch = mymerch;
+    }
+
+    public PageHistory getPageHistory() {
+        return pageHistory;
+    }
+
+    public void setPageHistory(PageHistory pageHistory) {
+        this.pageHistory = pageHistory;
+    }
+
+    public TopGenres getTopGenres() {
+        return topGenres;
+    }
+
+    public void setTopGenres(TopGenres topGenres) {
+        this.topGenres = topGenres;
     }
 }
 
