@@ -375,6 +375,12 @@ public final class Main {
             if (currComm.getCommand().equals("seeMerch")) {
                 results.addLast(currUser.seeMerch(currComm));
             }
+            if (currComm.getCommand().equals("nextPage")) {
+                results.addLast(currUser.nextPage(currComm));
+            }
+            if (currComm.getCommand().equals("previousPage")) {
+                results.addLast(currUser.previousPage(currComm));
+            }
         }
         for (int i = 0; i < userbase.getUserbase().size(); i++) {
             userbase.getUserbase().get(i).cancelPremium(commands.getLast());

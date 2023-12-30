@@ -40,6 +40,11 @@ interface notifObserv {
     void addNotification(Notification Notific);
 }
 
+interface CommandPage {
+    void execute();
+    void undo();
+}
+
 public class User implements Visitable, notifObserv{
     private String username;
     private int age;
@@ -327,6 +332,117 @@ public class User implements Visitable, notifObserv{
     final Premium premium = new Premium();
     boolean isPremium = false;
     LinkedList<String> mymerch = new LinkedList<>();
+
+    class PageHistory {
+        static class Page implements CommandPage {
+            private User user;
+            private String nextPage;
+            private String prevPage;
+            private User nextUser;
+            private User prevUser;
+            Page(final User nextUser, final String nextPage, final User user) {
+                this.user = user;
+                this.nextPage = nextPage;
+                this.nextUser = nextUser;
+                this.prevPage = user.getCurrentPage();
+                this.prevUser = user.getCurrUserrPage();
+            }
+
+            @Override
+            public void execute() {
+                user.setCurrUserrPage(nextUser);
+                user.setCurrentPage(nextPage);
+            }
+
+            @Override
+            public void undo() {
+                user.setCurrentPage(prevPage);
+                user.setCurrUserrPage(prevUser);
+            }
+
+            public String getNextPage() {
+                return nextPage;
+            }
+
+            public void setNextPage(String nextPage) {
+                this.nextPage = nextPage;
+            }
+
+            public String getPrevPage() {
+                return prevPage;
+            }
+
+            public void setPrevPage(String prevPage) {
+                this.prevPage = prevPage;
+            }
+
+            public User getNextUser() {
+                return nextUser;
+            }
+
+            public void setNextUser(User nextUser) {
+                this.nextUser = nextUser;
+            }
+
+            public User getPrevUser() {
+                return prevUser;
+            }
+
+            public void setPrevUser(User prevUser) {
+                this.prevUser = prevUser;
+            }
+
+            public User getUser() {
+                return user;
+            }
+
+            public void setUser(User user) {
+                this.user = user;
+            }
+        }
+        LinkedList<Page> undoLs = new LinkedList<>();
+        LinkedList<Page> redoLs = new LinkedList<>();
+
+        void ResetRedoLs() {
+            redoLs = new LinkedList<>();
+        }
+
+        void undo() {
+            if (undoLs.isEmpty()) {
+                return;
+            }
+            undoLs.getLast().undo();
+            redoLs.addLast(undoLs.getLast());
+            undoLs.removeLast();
+        }
+
+        void redo() {
+            if (redoLs.isEmpty()) {
+                return;
+            }
+            redoLs.getLast().execute();
+            undoLs.addLast(redoLs.getLast());
+            redoLs.removeLast();
+        }
+
+        public LinkedList<Page> getUndoLs() {
+            return undoLs;
+        }
+
+        public void setUndoLs(LinkedList<Page> undoLs) {
+            this.undoLs = undoLs;
+        }
+
+        public LinkedList<Page> getRedoLs() {
+            return redoLs;
+        }
+
+        public void setRedoLs(LinkedList<Page> redoLs) {
+            this.redoLs = redoLs;
+        }
+    }
+
+    PageHistory pageHistory = new PageHistory();
 
     public User(final UserInput user) {
         this.age = user.getAge();
@@ -677,14 +793,20 @@ public class User implements Visitable, notifObserv{
         if (lastsearch.equals("artist")) {
             String name = ((Artist) searcheditems.get(command.getItemNumber() - 1)).getUsername();
             result.setMessage("Successfully selected " + name + "'s page.");
-            currUserrPage = (Artist) searcheditems.get(command.getItemNumber() - 1);
-            currentPage = "ArtistPage";
+            Artist art = (Artist) searcheditems.get(command.getItemNumber() - 1);
+            PageHistory.Page newPage = new PageHistory.Page(art, "ArtistPage", this);
+            newPage.execute();
+            pageHistory.ResetRedoLs();
+            pageHistory.getUndoLs().addLast(newPage);
         }
         if (lastsearch.equals("host")) {
             String name = ((Host) searcheditems.get(command.getItemNumber() - 1)).getUsername();
             result.setMessage("Successfully selected " + name + "'s page.");
-            currUserrPage = (Host) searcheditems.get(command.getItemNumber() - 1);
-            currentPage = "HostPage";
+            Host art = (Host) searcheditems.get(command.getItemNumber() - 1);
+            PageHistory.Page newPage = new PageHistory.Page(art, "HostPage", this);
+            newPage.execute();
+            pageHistory.ResetRedoLs();
+            pageHistory.getUndoLs().addLast(newPage);
         }
         if (lastsearch.equals("album")) {
             String name = ((Album) searcheditems.get(command.getItemNumber() - 1)).getName();
@@ -1281,18 +1403,84 @@ public class User implements Visitable, notifObserv{
             return result;
         }
         String nextPage = command.getNextPage();
+        PageHistory.Page newPage = new PageHistory.Page(null, nextPage, this);
         if (!nextPage.equals("Home") && !nextPage.equals("LikedContent")) {
-            result.setMessage(username + " is trying to access a non-existent page.");
-            return result;
+            if (nextPage.equals("artist")) {
+                if ((player.getType().equals("nothing")) || player.getType().equals("podcast")) {
+                    result.setMessage(username + " is trying to access a non-existent page.");
+                    return result;
+                }
+                Userbase ub = Userbase.getInstance();
+                boolean found = false;
+                for (int i = 0; i < ub.getUserbase().size(); i++) {
+                    User us = ub.getUserbase().get(i);
+                    if (us.getUsername().equals(((Song) player.getCurrFile()).getArtist())) {
+                        found = true;
+                        newPage.setNextUser(us);
+                        newPage.setNextPage("ArtistPage");
+                    }
+                }
+                if (!found) {
+                    result.setMessage(username + " is trying to access a non-existent page.");
+                    return result;
+                }
+                pageHistory.getUndoLs().addLast(newPage);
+            }
+            if (nextPage.equals("host")) {
+                if ((!player.getType().equals("podcast"))) {
+                    result.setMessage(username + " is trying to access a non-existent page.");
+                    return result;
+                }
+                Userbase ub = Userbase.getInstance();
+                boolean found = false;
+                for (int i = 0; i < ub.getUserbase().size(); i++) {
+                    User us = ub.getUserbase().get(i);
+                    if (us.getUsername().equals(((Podcast) player.getSource()).getOwner())) {
+                        found = true;
+                        newPage.setNextUser(us);
+                        newPage.setNextPage("HostPage");
+                    }
+                }
+                if (!found) {
+                    result.setMessage(username + " is trying to access a non-existent page.");
+                    return result;
+                }
+                pageHistory.getUndoLs().addLast(newPage);
+            }
         }
-        currUserrPage = this;
+        newPage.setNextUser(this);
         if (command.getNextPage().equals("Home")) {
-            currentPage = "HomePage";
+            newPage.setNextPage("HomePage");
         } else {
-            currentPage = "LikedContentPage";
+            newPage.setNextPage("LikedContentPage");
         }
+        newPage.execute();
+        pageHistory.ResetRedoLs();
+        pageHistory.getUndoLs().addLast(newPage);
         result.setMessage(username + " accessed " + command.getNextPage() + " successfully.");
         return  result;
+    }
+
+    public ResultSwitch nextPage(final Command command) {
+        ResultSwitch result = new ResultSwitch(command);
+        if (pageHistory.getRedoLs().isEmpty()) {
+            result.setMessage("There are no pages left to go forward.");
+            return result;
+        }
+        pageHistory.redo();
+        result.setMessage("The user " + username + " has navigated successfully to the next page.");
+        return result;
+    }
+
+    public ResultSwitch previousPage(final Command command) {
+        ResultSwitch result = new ResultSwitch(command);
+        if (pageHistory.getUndoLs().isEmpty()) {
+            result.setMessage("There are no pages left to go back.");
+            return result;
+        }
+        pageHistory.undo();
+        result.setMessage("The user " + username + " has navigated successfully to the previous page.");
+        return result;
     }
 
     /**
