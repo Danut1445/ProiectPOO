@@ -47,6 +47,20 @@ public final class PrintCurrentPage implements Visitor {
                 }
                 page += ((Playlist) playlists.get(i)).getName();
             }
+            page += "]\n\nSong recommendations:\n\t[";
+            for (int i = 0; i < user.getRecSongs().size(); i++) {
+                if (i != 0) {
+                    page += ", ";
+                }
+                page += ((Song) user.getRecSongs().get(i)).getName();
+            }
+            page += "]\n\nPlaylists recommendations:\n\t[";
+            for (int i = 0; i < user.getRecPlaylist().size(); i++) {
+                if (i != 0) {
+                    page += ", ";
+                }
+                page += ((Playlist) user.getRecPlaylist().get(i)).getName();
+            }
             page += "]";
             result.setMessage(page);
         } else {
@@ -153,7 +167,11 @@ public final class PrintCurrentPage implements Visitor {
             }
             page += currAnn.getAnnName() + ":\n\t" + currAnn.getAnnDes();
         }
-        page += "\n]";
+        if (!host.getAnnouncements().isEmpty()) {
+            page += "\n]";
+        } else {
+            page += "]";
+        }
         result.setMessage(page);
         return result;
     }

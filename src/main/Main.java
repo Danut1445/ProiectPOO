@@ -77,10 +77,10 @@ public final class Main {
         ArrayNode outputs = objectMapper.createArrayNode();
         LinkedList<Object> results = new LinkedList<Object>();
 
-//        System.out.println(filePathInput);
-//        if (!filePathInput.equals("test09_etapa3_merch_buy.json")) {
-//            return;
-//        }
+        System.out.println(filePathInput);
+        if (!filePathInput.equals("test14_etapa3_page_navigation.json")) {
+            return;
+        }
 
         Library librarySongs = Library.getInstance();
         librarySongs.setSongs(new LinkedList<Song>());
@@ -380,6 +380,24 @@ public final class Main {
             }
             if (currComm.getCommand().equals("previousPage")) {
                 results.addLast(currUser.previousPage(currComm));
+            }
+            if (currComm.getCommand().equals("updateRecommendations")) {
+                if (!currUser.getUsername().equals(currComm.getUsername())) {
+                    ResultSwitch res = new ResultSwitch(currComm);
+                    res.setMessage("The username " + currComm.getUsername() + " doesn't exist.");
+                    results.addLast(res);
+                    continue;
+                }
+                if (currUser.getType() != 0) {
+                    ResultSwitch res = new ResultSwitch(currComm);
+                    res.setMessage(currComm.getUsername() + "  is not a normal user.");
+                    results.addLast(res);
+                    continue;
+                }
+                results.addLast(currUser.updateRecom(currComm));
+            }
+            if (currComm.getCommand().equals("loadRecommendations")) {
+                results.addLast(currUser.loadRecom(currComm));
             }
         }
         for (int i = 0; i < userbase.getUserbase().size(); i++) {

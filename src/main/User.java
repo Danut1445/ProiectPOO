@@ -411,6 +411,7 @@ public class User implements Visitable, notifObserv{
             if (undoLs.isEmpty()) {
                 return;
             }
+            System.out.println("Go back to: " + undoLs.getLast().prevPage);
             undoLs.getLast().undo();
             redoLs.addLast(undoLs.getLast());
             undoLs.removeLast();
@@ -421,6 +422,7 @@ public class User implements Visitable, notifObserv{
                 return;
             }
             redoLs.getLast().execute();
+            System.out.println("Go forward to: " + redoLs.getLast().getNextPage());
             undoLs.addLast(redoLs.getLast());
             redoLs.removeLast();
         }
@@ -509,6 +511,8 @@ public class User implements Visitable, notifObserv{
     private LinkedList<Song> genre3 = new LinkedList<>();
     private LinkedList<Song> recSongs = new LinkedList<>();
     private LinkedList<Playlist> recPlaylist = new LinkedList<>();
+    private int nrTopGenres;
+    private String lastAddRecom;
 
     public User(final UserInput user) {
         this.age = user.getAge();
@@ -518,6 +522,7 @@ public class User implements Visitable, notifObserv{
         this.currUserrPage = this;
         player.setType("nothing");
         player.setCurrUser(this);
+        lastAddRecom = "nothing";
     }
 
     public User(final Command command) {
@@ -528,6 +533,7 @@ public class User implements Visitable, notifObserv{
         this.currentPage = "HomePage";
         this.currUserrPage = this;
         player.setCurrUser(this);
+        lastAddRecom = "nothing";
     }
 
     /**
@@ -1471,7 +1477,7 @@ public class User implements Visitable, notifObserv{
         String nextPage = command.getNextPage();
         PageHistory.Page newPage = new PageHistory.Page(null, nextPage, this);
         if (!nextPage.equals("Home") && !nextPage.equals("LikedContent")) {
-            if (nextPage.equals("artist")) {
+            if (nextPage.equals("Artist")) {
                 if ((player.getType().equals("nothing")) || player.getType().equals("podcast")) {
                     result.setMessage(username + " is trying to access a non-existent page.");
                     return result;
@@ -1492,7 +1498,7 @@ public class User implements Visitable, notifObserv{
                 }
                 pageHistory.getUndoLs().addLast(newPage);
             }
-            if (nextPage.equals("host")) {
+            if (nextPage.equals("Host")) {
                 if ((!player.getType().equals("podcast"))) {
                     result.setMessage(username + " is trying to access a non-existent page.");
                     return result;
@@ -1505,6 +1511,7 @@ public class User implements Visitable, notifObserv{
                         found = true;
                         newPage.setNextUser(us);
                         newPage.setNextPage("HostPage");
+                        break;
                     }
                 }
                 if (!found) {
@@ -1514,10 +1521,11 @@ public class User implements Visitable, notifObserv{
                 pageHistory.getUndoLs().addLast(newPage);
             }
         }
-        newPage.setNextUser(this);
         if (command.getNextPage().equals("Home")) {
+            newPage.setNextUser(this);
             newPage.setNextPage("HomePage");
-        } else {
+        } else if (command.getNextPage().equals("LikedContent")){
+            newPage.setNextUser(this);
             newPage.setNextPage("LikedContentPage");
         }
         newPage.execute();
@@ -1884,25 +1892,244 @@ public class User implements Visitable, notifObserv{
             }
         }
         Collections.sort(topGenres.genres);
+        nrTopGenres = topGenres.genres.size();
         genre1 = new LinkedList<>();
         genre2 = new LinkedList<>();
         genre3 = new LinkedList<>();
         Library lb = Library.getInstance();
         for (int i = 0; i < lb.getSongs().size(); i++) {
             Song sg = lb.getSongs().get(i);
-            if (sg.getGenre().equals(topGenres.genres.get(0).getGenre())) {
-                genre1.addLast(sg);
+            if (nrTopGenres != 0) {
+                if (sg.getGenre().equals(topGenres.genres.get(0).getGenre())) {
+                    genre1.addLast(sg);
+                }
             }
-            if (sg.getGenre().equals(topGenres.genres.get(1).getGenre())) {
-                genre2.addLast(sg);
+            if (nrTopGenres > 1) {
+                if (sg.getGenre().equals(topGenres.genres.get(1).getGenre())) {
+                    genre2.addLast(sg);
+                }
             }
-            if (sg.getGenre().equals(topGenres.genres.get(2).getGenre())) {
-                genre3.addLast(sg);
+            if (nrTopGenres > 2) {
+                if (sg.getGenre().equals(topGenres.genres.get(2).getGenre())) {
+                    genre3.addLast(sg);
+                }
             }
         }
         Collections.sort(genre1);
         Collections.sort(genre2);
         Collections.sort(genre3);
+    }
+
+    public ResultSwitch updateRecom(final Command command) {
+        ResultSwitch result = new ResultSwitch(command);
+        updatePlayer(command);
+        if (command.getRecommendationType().equals("random_song")) {
+            if (!player.getType().equals("song")) {
+                result.setMessage("No new recommendations were found");
+                return result;
+            }
+            int passed = ((Song) player.getCurrFile()).getDuration();
+            passed -= player.getTimeremaining();
+            if (passed < 30) {
+                result.setMessage("No new recommendations were found");
+                return result;
+            }
+            String genre = ((Song) player.getCurrFile()).getGenre();
+            genre1 = new LinkedList<>();
+            Library lb = Library.getInstance();
+            for (int i = 0; i < lb.getSongs().size(); i++) {
+                Song sg = lb.getSongs().get(i);
+                if (sg.getGenre().equals(genre)) {
+                    genre1.addLast(sg);
+                }
+            }
+            Random random = new Random(passed);
+            int nrsong = random.nextInt(genre1.size());
+            Song sg = genre1.get(nrsong);
+            for (int i = 0; i < recSongs.size(); i++) {
+                if (recSongs.get(i).getName().equals(sg.getName())) {
+                    result.setMessage("No new recommendations were found");
+                    return result;
+                }
+            }
+            recSongs.addLast(sg);
+            result.setMessage("The recommendations for user " + username + " have been updated successfully.");
+            lastAddRecom = "song";
+            return result;
+        }
+        if (command.getRecommendationType().equals("fans_playlist")) {
+            final int nr = 5;
+            Playlist playlist = new Playlist();
+            playlist.setUser(this.getUsername());
+            playlist.setPrivacy("public");
+            if (player.getType().equals("podcast") || player.getType().equals("nothing")) {
+                result.setMessage("No new recommendations were found");
+                return result;
+            }
+            String name = ((Song) player.getCurrFile()).getArtist();
+            Userbase ub = Userbase.getInstance();
+            Artist art = null;
+            for (int i = 0; i < ub.getUserbase().size(); i++) {
+                if (ub.getUserbase().get(i).getUsername().equals(name)) {
+                    art = (Artist) ub.getUserbase().get(i);
+                    break;
+                }
+            }
+            if (art == null) {
+                result.setMessage("No new recommendations were found");
+                return result;
+            }
+            Collections.sort(art.getWrappedartist().getUserListens());
+            int size = art.getWrappedartist().getUserListens().size();
+            for (int i = 0; i < nr && i < size; i++) {
+                String usrnm = art.getWrappedartist().getUserListens().get(i).getUser();
+                User user = null;
+                for (int j = 0; j < ub.getUserbase().size(); j++) {
+                    if (ub.getUserbase().get(j).getUsername().equals(name)) {
+                        user = ub.getUserbase().get(j);
+                        break;
+                    }
+                }
+                if (user == null) {
+                    break;
+                }
+                int nr2 = 5;
+                genre1 = new LinkedList<>();
+                for (int j = 0; j < user.getPreferedSongs().size(); j++) {
+                    genre1.addLast(user.getPreferedSongs().get(j));
+                }
+                Collections.sort(genre1);
+                for (int j = 0; j < genre1.size(); j++) {
+                    Song sg = genre1.get(j);
+                    boolean duplicate = false;
+                    for (int k = 0; k < playlist.getSongs().size(); k++) {
+                        if (playlist.getSongs().get(k).getName().equals(sg.getName())) {
+                            duplicate = true;
+                            break;
+                        }
+                    }
+                    if (!duplicate) {
+                        nr2--;
+                        playlist.getSongs().addLast(sg);
+                        if (nr2 == 0) {
+                            break;
+                        }
+                    }
+                }
+            }
+            playlist.setName(art.getUsername() + " Fan Club recommendations");
+            recPlaylist.addLast(playlist);
+            result.setMessage("The recommendations for user " + username + " have been updated successfully.");
+            lastAddRecom = "playlist";
+            return result;
+        }
+        updateTopGenres();
+        Playlist playlist = new Playlist();
+        playlist.setName(username + "'s recommendations");
+        playlist.setPrivacy("public");
+        playlist.setUser(username);
+        final int nr1 = 5, nr2 = 3, nr3 = 2;
+        if (nrTopGenres == 0) {
+            result.setMessage("No new recommendations were found");
+            return result;
+        }
+        for (int i = 0; i < nr1 && i < genre1.size(); i++) {
+            playlist.getSongs().addLast(genre1.get(i));
+        }
+        if (nrTopGenres > 1) {
+            for (int i = 0; i < nr2 && i < genre2.size(); i++) {
+                playlist.getSongs().addLast(genre2.get(i));
+            }
+        }
+        if (nrTopGenres > 2) {
+            for (int i = 0; i < nr3 && i < genre3.size(); i++) {
+                playlist.getSongs().addLast(genre3.get(i));
+            }
+        }
+        recPlaylist.addLast(playlist);
+        result.setMessage("The recommendations for user " + username + " have been updated successfully.");
+        lastAddRecom = "playlist";
+        return result;
+    }
+
+    public ResultLoad loadRecom(final Command command) {
+        ResultLoad result = new ResultLoad(command);
+        if (isOffline()) {
+            result.setMessage(username + " is offline.");
+            return result;
+        }
+        if (lastAddRecom.equals("nothing")) {
+            result.setMessage("No recommendations available.");
+            return result;
+        }
+        player.status(command);
+        if (player.getType().equals("podcast")) {
+            PodcastInfo info = containsPodcast(((Podcast) player.getSource()).getName());
+            if (info != null) {
+                info.setCurrepisode(player.getCurrentObject());
+                info.setRemainingtime(player.getTimeremaining());
+                info.setOwner(((Podcast) player.getSource()).getOwner());
+                if (player.getType().equals("nothing")) {
+                    podcastInfos.remove(info);
+                }
+            } else {
+                info = new PodcastInfo();
+                info.setPodcastname(((Podcast) player.getSource()).getName());
+                info.setRemainingtime(player.getTimeremaining());
+                info.setCurrepisode(player.getCurrentObject());
+                info.setOwner(((Podcast) player.getSource()).getOwner());
+                podcastInfos.addLast(info);
+            }
+        }
+        player.setSource(null);
+        player.setType("nothing");
+        lastsearch = "nothing";
+        player.setAd(null);
+        player.setNextAd(0);
+        player.setAdrev(0);
+        if (lastAddRecom.equals("song")) {
+            Song sg = recSongs.get(recSongs.size() - 1);
+            player.setTimeremaining(sg.getDuration());
+            player.setType("song");
+            player.setCurrFile(sg);
+            player.setPause(false);
+            updateWrapped("song", player.getCurrFile());
+            updateWrapped("artist", sg.getArtist());
+            updateWrapped("genre", sg.getGenre());
+            updateWrapped("album", sg.getAlbum());
+            Userbase.getInstance().addStats(sg.getArtist(), sg);
+            Userbase.getInstance().updateArt(sg, this, sg.getArtist());
+            player.addSg(sg);
+            player.setSource(sg);
+            player.setLasttimestamp(command.getTimestamp());
+            player.setPause(false);
+            player.setRepeat(0);
+            player.setShuffle(false);
+        }
+        if (lastAddRecom.equals("playlist")) {
+            Playlist playlist = recPlaylist.get(recPlaylist.size() - 1);
+            int aux = playlist.getSongs().size();
+            player.setTimeremaining(playlist.getSongs().get(0).getDuration());
+            player.setType("playlist");
+            player.setCurrFile(playlist.getSongs().get(0));
+            player.setCurrentObject(0);
+            player.setOrder(IntStream.range(0, aux).toArray());
+            Song currSong = playlist.getSongs().get(0);
+            updateWrapped("song", currSong);
+            updateWrapped("artist", currSong.getArtist());
+            updateWrapped("genre", currSong.getGenre());
+            updateWrapped("album", currSong.getAlbum());
+            Userbase.getInstance().addStats(currSong.getArtist(), currSong);
+            Userbase.getInstance().updateArt(currSong, this, currSong.getArtist());
+            player.addSg(currSong);
+            player.setSource(playlist);
+            player.setLasttimestamp(command.getTimestamp());
+            player.setPause(false);
+            player.setRepeat(0);
+            player.setShuffle(false);
+        }
+        result.setMessage("Playback loaded successfully.");
+        return result;
     }
 
     public final boolean isOffline() {
@@ -2079,6 +2306,22 @@ public class User implements Visitable, notifObserv{
 
     public void setTopGenres(TopGenres topGenres) {
         this.topGenres = topGenres;
+    }
+
+    public LinkedList<Song> getRecSongs() {
+        return recSongs;
+    }
+
+    public void setRecSongs(LinkedList<Song> recSongs) {
+        this.recSongs = recSongs;
+    }
+
+    public LinkedList<Playlist> getRecPlaylist() {
+        return recPlaylist;
+    }
+
+    public void setRecPlaylist(LinkedList<Playlist> recPlaylist) {
+        this.recPlaylist = recPlaylist;
     }
 }
 
