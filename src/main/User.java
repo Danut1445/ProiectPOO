@@ -411,7 +411,6 @@ public class User implements Visitable, notifObserv{
             if (undoLs.isEmpty()) {
                 return;
             }
-            System.out.println("Go back to: " + undoLs.getLast().prevPage);
             undoLs.getLast().undo();
             redoLs.addLast(undoLs.getLast());
             undoLs.removeLast();
@@ -422,7 +421,6 @@ public class User implements Visitable, notifObserv{
                 return;
             }
             redoLs.getLast().execute();
-            System.out.println("Go forward to: " + redoLs.getLast().getNextPage());
             undoLs.addLast(redoLs.getLast());
             redoLs.removeLast();
         }
@@ -1496,7 +1494,6 @@ public class User implements Visitable, notifObserv{
                     result.setMessage(username + " is trying to access a non-existent page.");
                     return result;
                 }
-                pageHistory.getUndoLs().addLast(newPage);
             }
             if (nextPage.equals("Host")) {
                 if ((!player.getType().equals("podcast"))) {
@@ -1518,7 +1515,6 @@ public class User implements Visitable, notifObserv{
                     result.setMessage(username + " is trying to access a non-existent page.");
                     return result;
                 }
-                pageHistory.getUndoLs().addLast(newPage);
             }
         }
         if (command.getNextPage().equals("Home")) {
