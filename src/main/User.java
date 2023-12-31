@@ -1964,7 +1964,7 @@ public class User implements Visitable, notifObserv{
             Playlist playlist = new Playlist();
             playlist.setUser(this.getUsername());
             playlist.setPrivacy("public");
-            if (player.getType().equals("podcast") || player.getType().equals("nothing")) {
+            if (!player.getType().equals("playlist")) {
                 result.setMessage("No new recommendations were found");
                 return result;
             }
