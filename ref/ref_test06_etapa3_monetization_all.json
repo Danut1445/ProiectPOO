@@ -5239,13 +5239,13 @@
   "command" : "search",
   "user" : "carol19",
   "timestamp" : 6861,
-  "message" : "Search returned 4 results",
-  "results" : [ "Thinking Out Loud", "Think", "Think", "Think About It (Sessions, Roughs & Outtakes)" ]
+  "message" : "Search returned 3 results",
+  "results" : [ "Think", "Think", "Think About It (Sessions, Roughs & Outtakes)" ]
 }, {
   "command" : "select",
   "user" : "carol19",
   "timestamp" : 6861,
-  "message" : "Successfully selected Thinking Out Loud."
+  "message" : "Successfully selected Think."
 }, {
   "command" : "load",
   "user" : "carol19",
@@ -5808,8 +5808,8 @@
   "command" : "search",
   "user" : "grace25",
   "timestamp" : 7675,
-  "message" : "Search returned 4 results",
-  "results" : [ "Black Dog", "Black Dog", "Black Dog - Basic Track With Guitar Overdubs", "Black Dog" ]
+  "message" : "Search returned 3 results",
+  "results" : [ "Black Dog", "Black Dog - Basic Track With Guitar Overdubs", "Black Dog" ]
 }, {
   "command" : "select",
   "user" : "grace25",
@@ -5935,8 +5935,8 @@
   "command" : "search",
   "user" : "emily30",
   "timestamp" : 7879,
-  "message" : "Search returned 2 results",
-  "results" : [ "Whole Lotta Love", "Whole Lotta Love" ]
+  "message" : "Search returned 1 results",
+  "results" : [ "Whole Lotta Love" ]
 }, {
   "command" : "select",
   "user" : "emily30",
@@ -6196,8 +6196,8 @@
   "command" : "search",
   "user" : "emily30",
   "timestamp" : 8529,
-  "message" : "Search returned 2 results",
-  "results" : [ "Good Times Bad Times", "Good Times Bad Times" ]
+  "message" : "Search returned 1 results",
+  "results" : [ "Good Times Bad Times" ]
 }, {
   "command" : "select",
   "user" : "emily30",
@@ -6879,7 +6879,7 @@
   "timestamp" : 9635,
   "result" : {
     "topAlbums" : {
-      "Soul Queen" : 77,
+      "Soul Queen" : 78,
       "I Never Loved a Man the Way I Love You" : 12,
       "Aretha Now" : 6,
       "Respect" : 2
@@ -7958,8 +7958,8 @@
       "soul" : 24,
       "jazz" : 14,
       "folk" : 10,
-      "reggae" : 8,
-      "classic rock" : 7
+      "classic rock" : 8,
+      "reggae" : 8
     },
     "topSongs" : {
       "'Til Tomorrow" : 2,
@@ -8114,8 +8114,8 @@
   "command" : "search",
   "user" : "henry26",
   "timestamp" : 11598,
-  "message" : "Search returned 4 results",
-  "results" : [ "Stairway to Heaven", "Stairway to Heaven", "Stairway To Heaven - Sunset Sound Mix", "Stairway to Heaven" ]
+  "message" : "Search returned 3 results",
+  "results" : [ "Stairway to Heaven", "Stairway To Heaven - Sunset Sound Mix", "Stairway to Heaven" ]
 }, {
   "command" : "select",
   "user" : "henry26",
@@ -8935,8 +8935,8 @@
   "command" : "search",
   "user" : "carol19",
   "timestamp" : 13455,
-  "message" : "Search returned 2 results",
-  "results" : [ "Whole Lotta Love", "Whole Lotta Love" ]
+  "message" : "Search returned 1 results",
+  "results" : [ "Whole Lotta Love" ]
 }, {
   "command" : "select",
   "user" : "carol19",
@@ -8967,8 +8967,8 @@
   "command" : "search",
   "user" : "bob35",
   "timestamp" : 13554,
-  "message" : "Search returned 4 results",
-  "results" : [ "Stairway to Heaven", "Stairway to Heaven", "Stairway To Heaven - Sunset Sound Mix", "Stairway to Heaven" ]
+  "message" : "Search returned 3 results",
+  "results" : [ "Stairway to Heaven", "Stairway To Heaven - Sunset Sound Mix", "Stairway to Heaven" ]
 }, {
   "command" : "select",
   "user" : "bob35",
@@ -9180,8 +9180,8 @@
   "command" : "search",
   "user" : "carol19",
   "timestamp" : 13820,
-  "message" : "Search returned 4 results",
-  "results" : [ "Black Dog", "Black Dog", "Black Dog - Basic Track With Guitar Overdubs", "Black Dog" ]
+  "message" : "Search returned 3 results",
+  "results" : [ "Black Dog", "Black Dog - Basic Track With Guitar Overdubs", "Black Dog" ]
 }, {
   "command" : "select",
   "user" : "carol19",
@@ -10109,7 +10109,7 @@
     },
     "topGenres" : {
       "classic rock" : 23,
-      "rock" : 21,
+      "rock" : 20,
       "reggae" : 17,
       "soul" : 14,
       "1974" : 12
@@ -10639,8 +10639,8 @@
   "command" : "search",
   "user" : "alice22",
   "timestamp" : 16052,
-  "message" : "Search returned 4 results",
-  "results" : [ "Black Dog", "Black Dog", "Black Dog - Basic Track With Guitar Overdubs", "Black Dog" ]
+  "message" : "Search returned 3 results",
+  "results" : [ "Black Dog", "Black Dog - Basic Track With Guitar Overdubs", "Black Dog" ]
 }, {
   "command" : "select",
   "user" : "alice22",
@@ -10929,8 +10929,8 @@
   "command" : "search",
   "user" : "alice22",
   "timestamp" : 16449,
-  "message" : "Search returned 4 results",
-  "results" : [ "Stairway to Heaven", "Stairway to Heaven", "Stairway To Heaven - Sunset Sound Mix", "Stairway to Heaven" ]
+  "message" : "Search returned 3 results",
+  "results" : [ "Stairway to Heaven", "Stairway To Heaven - Sunset Sound Mix", "Stairway to Heaven" ]
 }, {
   "command" : "select",
   "user" : "alice22",
@@ -11325,10 +11325,9 @@
   "timestamp" : 17287,
   "result" : {
     "topAlbums" : {
-      "Led Zeppelin IV (Deluxe Edition)" : 48,
+      "Led Zeppelin IV (Deluxe Edition)" : 54,
       "Led Zeppelin" : 17,
-      "Led Zeppelin II" : 15,
-      "Led Zeppelin IV" : 6
+      "Led Zeppelin II" : 15
     },
     "topSongs" : {
       "Black Dog" : 6,
@@ -11671,7 +11670,7 @@
       "pop" : 19,
       "soul" : 19,
       "jazz" : 15,
-      "rock" : 15,
+      "rock" : 14,
       "folk" : 13
     },
     "topSongs" : {
@@ -11826,10 +11825,10 @@
     },
     "topGenres" : {
       "soul" : 47,
-      "rock" : 22,
+      "rock" : 21,
       "reggae" : 20,
       "jazz" : 12,
-      "70s" : 8
+      "70s" : 9
     },
     "topSongs" : {
       "African Herbsman" : 2,
@@ -11842,7 +11841,7 @@
       "Soul Queen" : 39,
       "Natural Mystic" : 15,
       "Greatest Hits" : 10,
-      "Led Zeppelin IV (Deluxe Edition)" : 7,
+      "Led Zeppelin IV (Deluxe Edition)" : 8,
       "Both Sides Now" : 6
     },
     "topEpisodes" : { }
@@ -12189,11 +12188,11 @@
       "Led Zeppelin" : 13
     },
     "topGenres" : {
-      "soul" : 36,
+      "soul" : 37,
       "reggae" : 18,
-      "rock" : 18,
       "classic rock" : 17,
-      "folk" : 16
+      "folk" : 16,
+      "rock" : 16
     },
     "topSongs" : {
       "400 Years" : 3,
@@ -12867,11 +12866,11 @@
       "Madonna" : 11
     },
     "topGenres" : {
+      "70s" : 29,
       "justice for silver springs" : 29,
-      "70s" : 27,
       "soul" : 25,
       "christmas" : 14,
-      "rock" : 14
+      "rock" : 12
     },
     "topSongs" : {
       "Black Dog" : 3,
@@ -12882,7 +12881,7 @@
     },
     "topAlbums" : {
       "Rumours (Super Deluxe)" : 29,
-      "Led Zeppelin IV (Deluxe Edition)" : 24,
+      "Led Zeppelin IV (Deluxe Edition)" : 26,
       "A Jolly Christmas from Frank Sinatra" : 12,
       "Soul Queen" : 8,
       "Confessions on a Dance Floor" : 6
@@ -12969,12 +12968,6 @@
       "songRevenue" : 1196369.6,
       "ranking" : 13,
       "mostProfitableSong" : "Babe I'm Gonna Leave You"
-    },
-    "Ed Sheeran" : {
-      "merchRevenue" : 0.0,
-      "songRevenue" : 0.0,
-      "ranking" : 14,
-      "mostProfitableSong" : "N/A"
     }
   }
 } ]

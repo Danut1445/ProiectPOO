@@ -521,6 +521,7 @@ public class User implements Visitable, notifObserv{
         player.setType("nothing");
         player.setCurrUser(this);
         lastAddRecom = "nothing";
+        mymerch = new LinkedList<>();
     }
 
     public User(final Command command) {
@@ -532,6 +533,7 @@ public class User implements Visitable, notifObserv{
         this.currUserrPage = this;
         player.setCurrUser(this);
         lastAddRecom = "nothing";
+        mymerch = new LinkedList<>();
     }
 
     /**
@@ -1866,7 +1868,11 @@ public class User implements Visitable, notifObserv{
 
     public ResultMerch seeMerch(final Command command) {
         ResultMerch result = new ResultMerch(command);
-        result.setResult(mymerch);
+        LinkedList<String> results = new LinkedList<>();
+        for (int i = 0; i < mymerch.size(); i++) {
+            results.addLast(mymerch.get(i));
+        }
+        result.setResult(results);
         return result;
     }
 

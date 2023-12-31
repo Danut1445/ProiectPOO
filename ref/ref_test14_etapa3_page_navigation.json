@@ -79,8 +79,8 @@
   "command" : "search",
   "user" : "ghiu",
   "timestamp" : 90,
-  "message" : "Search returned 2 results",
-  "results" : [ "Bohemian Rhapsody", "Bohemian Rhapsody" ]
+  "message" : "Search returned 1 results",
+  "results" : [ "Bohemian Rhapsody" ]
 }, {
   "command" : "select",
   "user" : "ghiu",
@@ -97,7 +97,7 @@
   "timestamp" : 115,
   "stats" : {
     "name" : "Bohemian Rhapsody",
-    "remainedTime" : 345,
+    "remainedTime" : 340,
     "repeat" : "No Repeat",
     "shuffle" : false,
     "paused" : false
@@ -122,8 +122,8 @@
   "user" : "ghiu",
   "timestamp" : 165,
   "stats" : {
-    "name" : "Radio Ga Ga",
-    "remainedTime" : 334,
+    "name" : "Seven Seas of Rhye",
+    "remainedTime" : 69,
     "repeat" : "No Repeat",
     "shuffle" : false,
     "paused" : false
@@ -147,7 +147,7 @@
   "user" : "ghiu",
   "command" : "printCurrentPage",
   "timestamp" : 205,
-  "message" : "Liked songs:\n\t[Bohemian Rhapsody, Radio Ga Ga]\n\nFollowed playlists:\n\t[]\n\nSong recommendations:\n\t[Radio Ga Ga]\n\nPlaylists recommendations:\n\t[]"
+  "message" : "Liked songs:\n\t[Bohemian Rhapsody, Seven Seas of Rhye]\n\nFollowed playlists:\n\t[]\n\nSong recommendations:\n\t[Seven Seas of Rhye]\n\nPlaylists recommendations:\n\t[]"
 }, {
   "command" : "previousPage",
   "user" : "ghiu",
@@ -187,7 +187,7 @@
   "user" : "ghiu",
   "command" : "printCurrentPage",
   "timestamp" : 265,
-  "message" : "Liked songs:\n\t[Bohemian Rhapsody, Radio Ga Ga]\n\nFollowed playlists:\n\t[]\n\nSong recommendations:\n\t[Radio Ga Ga]\n\nPlaylists recommendations:\n\t[]"
+  "message" : "Liked songs:\n\t[Bohemian Rhapsody, Seven Seas of Rhye]\n\nFollowed playlists:\n\t[]\n\nSong recommendations:\n\t[Seven Seas of Rhye]\n\nPlaylists recommendations:\n\t[]"
 }, {
   "command" : "nextPage",
   "user" : "ghiu",

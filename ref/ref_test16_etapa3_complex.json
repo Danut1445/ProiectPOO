@@ -18203,8 +18203,8 @@
   "command" : "search",
   "user" : "jack29",
   "timestamp" : 18751,
-  "message" : "Search returned 3 results",
-  "results" : [ "Gimme Shelter", "Gimme Shelter", "Gimme Shelter" ]
+  "message" : "Search returned 2 results",
+  "results" : [ "Gimme Shelter", "Gimme Shelter" ]
 }, {
   "command" : "select",
   "user" : "jack29",
@@ -20642,10 +20642,10 @@
     },
     "topGenres" : {
       "pop" : 29,
-      "rock" : 19,
+      "rock" : 18,
       "soul" : 17,
-      "folk" : 12,
-      "classic rock" : 11
+      "classic rock" : 12,
+      "folk" : 12
     },
     "topSongs" : {
       "He's Misstra Know It All" : 3,
@@ -21382,8 +21382,8 @@
   "command" : "search",
   "user" : "grace25",
   "timestamp" : 22943,
-  "message" : "Search returned 3 results",
-  "results" : [ "Gimme Shelter", "Gimme Shelter", "Gimme Shelter" ]
+  "message" : "Search returned 2 results",
+  "results" : [ "Gimme Shelter", "Gimme Shelter" ]
 }, {
   "command" : "select",
   "user" : "grace25",
@@ -21606,8 +21606,8 @@
   "command" : "search",
   "user" : "grace25",
   "timestamp" : 23550,
-  "message" : "Search returned 3 results",
-  "results" : [ "Gimme Shelter", "Gimme Shelter", "Gimme Shelter" ]
+  "message" : "Search returned 2 results",
+  "results" : [ "Gimme Shelter", "Gimme Shelter" ]
 }, {
   "command" : "select",
   "user" : "grace25",
@@ -24543,11 +24543,11 @@
       "Adele" : 13
     },
     "topGenres" : {
-      "rock" : 48,
+      "rock" : 46,
       "soul" : 26,
+      "classic rock" : 15,
       "folk rock" : 14,
-      "pop" : 14,
-      "classic rock" : 13
+      "pop" : 14
     },
     "topSongs" : {
       "Live With Me" : 3,
