@@ -58,7 +58,7 @@ public final class PodcastLibrary {
         result.setMessage(currUser.getUsername() + " has added new podcast successfully.");
         Host ht = (Host) currUser;
         for (int i = 0; i < ht.getSubscribers().size(); i++) {
-            notifObserv.Notification notif = new notifObserv.Notification();
+            NotifObserv.Notification notif = new NotifObserv.Notification();
             notif.setName("New Podcast");
             notif.setDescription("New Podcast from " + ht.getUsername() + ".");
             ht.getSubscribers().get(i).addNotification(notif);

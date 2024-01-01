@@ -61,7 +61,7 @@ public final class AlbumLibrary {
         result.setMessage(currUser.getUsername() + " has added new album successfully.");
         Artist ht = (Artist) currUser;
         for (int i = 0; i < ht.getSubscribers().size(); i++) {
-            notifObserv.Notification notif = new notifObserv.Notification();
+            NotifObserv.Notification notif = new NotifObserv.Notification();
             notif.setName("New Album");
             notif.setDescription("New Album from " + ht.getUsername() + ".");
             ht.getSubscribers().get(i).addNotification(notif);

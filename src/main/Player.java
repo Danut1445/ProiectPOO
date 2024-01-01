@@ -21,7 +21,7 @@ public final class Player {
         return currUser;
     }
 
-    public void setCurrUser(User currUser) {
+    public void setCurrUser(final User currUser) {
         this.currUser = currUser;
     }
 
@@ -85,7 +85,7 @@ public final class Player {
         return listSg;
     }
 
-    public void setListSg(User.Premium listSg) {
+    public void setListSg(final User.Premium listSg) {
         this.listSg = listSg;
     }
 
@@ -93,7 +93,7 @@ public final class Player {
         return nextAd;
     }
 
-    public void setNextAd(int nextAd) {
+    public void setNextAd(final int nextAd) {
         this.nextAd = nextAd;
     }
 
@@ -101,7 +101,7 @@ public final class Player {
         return ad;
     }
 
-    public void setAd(Song ad) {
+    public void setAd(final Song ad) {
         this.ad = ad;
     }
 
@@ -109,7 +109,7 @@ public final class Player {
         return adrev;
     }
 
-    public void setAdrev(double adrev) {
+    public void setAdrev(final double adrev) {
         this.adrev = adrev;
     }
 
@@ -129,8 +129,9 @@ public final class Player {
                     currUser.updateWrapped("album", ((Song) currFile).getAlbum());
                     currUser.updateWrapped("genre", ((Song) currFile).getGenre());
                     currUser.updateWrapped("artist", ((Song) currFile).getArtist());
-                    Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
-                    Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
+                    String art = ((Song) currFile).getArtist();
+                    Userbase.getInstance().addStats(art, (Song) currFile);
+                    Userbase.getInstance().updateArt((Song) currFile, currUser, art);
                     addSg((Song) currFile);
                 }
                 nextAd = 0;
@@ -155,8 +156,9 @@ public final class Player {
                         currUser.updateWrapped("album", ((Song) currFile).getAlbum());
                         currUser.updateWrapped("genre", ((Song) currFile).getGenre());
                         currUser.updateWrapped("artist", ((Song) currFile).getArtist());
-                        Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
-                        Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
+                        String art = ((Song) currFile).getArtist();
+                        Userbase.getInstance().addStats(art, (Song) currFile);
+                        Userbase.getInstance().updateArt((Song) currFile, currUser, art);
                         addSg((Song) currFile);
                     }
                 } else {
@@ -187,8 +189,9 @@ public final class Player {
                             currUser.updateWrapped("album", ((Song) currFile).getAlbum());
                             currUser.updateWrapped("genre", ((Song) currFile).getGenre());
                             currUser.updateWrapped("artist", ((Song) currFile).getArtist());
-                            Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
-                            Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
+                            String art = ((Song) currFile).getArtist();
+                            Userbase.getInstance().addStats(art, (Song) currFile);
+                            Userbase.getInstance().updateArt((Song) currFile, currUser, art);
                             addSg((Song) currFile);
                         }
                     } else {
@@ -226,8 +229,9 @@ public final class Player {
                         currUser.updateWrapped("album", ((Song) currFile).getAlbum());
                         currUser.updateWrapped("genre", ((Song) currFile).getGenre());
                         currUser.updateWrapped("artist", ((Song) currFile).getArtist());
-                        Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
-                        Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
+                        String art = ((Song) currFile).getArtist();
+                        Userbase.getInstance().addStats(art, (Song) currFile);
+                        Userbase.getInstance().updateArt((Song) currFile, currUser, art);
                         addSg((Song) currFile);
                     }
                 }
@@ -253,8 +257,9 @@ public final class Player {
                         currUser.updateWrapped("album", ((Song) currFile).getAlbum());
                         currUser.updateWrapped("genre", ((Song) currFile).getGenre());
                         currUser.updateWrapped("artist", ((Song) currFile).getArtist());
-                        Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
-                        Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
+                        String art = ((Song) currFile).getArtist();
+                        Userbase.getInstance().addStats(art, (Song) currFile);
+                        Userbase.getInstance().updateArt((Song) currFile, currUser, art);
                         addSg((Song) currFile);
                     }
                 }
@@ -275,8 +280,9 @@ public final class Player {
                         currUser.updateWrapped("album", ((Song) currFile).getAlbum());
                         currUser.updateWrapped("genre", ((Song) currFile).getGenre());
                         currUser.updateWrapped("artist", ((Song) currFile).getArtist());
-                        Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
-                        Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
+                        String art = ((Song) currFile).getArtist();
+                        Userbase.getInstance().addStats(art, (Song) currFile);
+                        Userbase.getInstance().updateArt((Song) currFile, currUser, art);
                         addSg((Song) currFile);
                     }
                 }
@@ -310,8 +316,9 @@ public final class Player {
                         currUser.updateWrapped("album", ((Song) currFile).getAlbum());
                         currUser.updateWrapped("genre", ((Song) currFile).getGenre());
                         currUser.updateWrapped("artist", ((Song) currFile).getArtist());
-                        Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
-                        Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
+                        String art = ((Song) currFile).getArtist();
+                        Userbase.getInstance().addStats(art, (Song) currFile);
+                        Userbase.getInstance().updateArt((Song) currFile, currUser, art);
                         addSg((Song) currFile);
                     }
                 }
@@ -337,8 +344,9 @@ public final class Player {
                         currUser.updateWrapped("album", ((Song) currFile).getAlbum());
                         currUser.updateWrapped("genre", ((Song) currFile).getGenre());
                         currUser.updateWrapped("artist", ((Song) currFile).getArtist());
-                        Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
-                        Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
+                        String art = ((Song) currFile).getArtist();
+                        Userbase.getInstance().addStats(art, (Song) currFile);
+                        Userbase.getInstance().updateArt((Song) currFile, currUser, art);
                         addSg((Song) currFile);
                     }
                 }
@@ -359,8 +367,9 @@ public final class Player {
                         currUser.updateWrapped("album", ((Song) currFile).getAlbum());
                         currUser.updateWrapped("genre", ((Song) currFile).getGenre());
                         currUser.updateWrapped("artist", ((Song) currFile).getArtist());
-                        Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
-                        Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
+                        String art = ((Song) currFile).getArtist();
+                        Userbase.getInstance().addStats(art, (Song) currFile);
+                        Userbase.getInstance().updateArt((Song) currFile, currUser, art);
                         addSg((Song) currFile);
                     }
                 }
@@ -379,7 +388,8 @@ public final class Player {
                     currFile = ((Podcast) source).getEpisodes().get(currentObject);
                     timeremaining = (currFile).getDuration();
                     currUser.updateWrapped("episode", currFile);
-                    Userbase.getInstance().updateHost((Episode) currFile, currUser,((Podcast) source).getOwner());
+                    String ow = ((Podcast) source).getOwner();
+                    Userbase.getInstance().updateHost((Episode) currFile, currUser, ow);
                     break;
                 }
             }
@@ -398,7 +408,8 @@ public final class Player {
                     currFile = ((Podcast) source).getEpisodes().get(currentObject);
                     timeremaining = (currFile).getDuration();
                     currUser.updateWrapped("episode", currFile);
-                    Userbase.getInstance().updateHost((Episode) currFile, currUser,((Podcast) source).getOwner());
+                    String ow = ((Podcast) source).getOwner();
+                    Userbase.getInstance().updateHost((Episode) currFile, currUser, ow);
                 }
             }
             if (repeat == 2) {
@@ -411,7 +422,8 @@ public final class Player {
                     currFile = ((Podcast) source).getEpisodes().get(currentObject);
                     timeremaining = (currFile).getDuration();
                     currUser.updateWrapped("episode", currFile);
-                    Userbase.getInstance().updateHost((Episode) currFile, currUser,((Podcast) source).getOwner());
+                    String ow = ((Podcast) source).getOwner();
+                    Userbase.getInstance().updateHost((Episode) currFile, currUser, ow);
                 }
             }
         }
@@ -442,7 +454,8 @@ public final class Player {
                   currFile = ((Podcast) source).getEpisodes().get(currentObject);
                   timeremaining = currFile.getDuration();
                   currUser.updateWrapped("episode", currFile);
-                  Userbase.getInstance().updateHost((Episode) currFile, currUser,((Podcast) source).getOwner());
+                  String ow = ((Podcast) source).getOwner();
+                  Userbase.getInstance().updateHost((Episode) currFile, currUser, ow);
               }
             }
         }
@@ -453,7 +466,8 @@ public final class Player {
                 repeat = 0;
                 timeremaining = currFile.getDuration();
                 currUser.updateWrapped("episode", currFile);
-                Userbase.getInstance().updateHost((Episode) currFile, currUser,((Podcast) source).getOwner());
+                String ow = ((Podcast) source).getOwner();
+                Userbase.getInstance().updateHost((Episode) currFile, currUser, ow);
             }
         }
         if (repeat == 2) {
@@ -462,7 +476,8 @@ public final class Player {
             } else {
                 timeremaining = currFile.getDuration();
                 currUser.updateWrapped("episode", currFile);
-                Userbase.getInstance().updateHost((Episode) currFile, currUser,((Podcast) source).getOwner());
+                String ow = ((Podcast) source).getOwner();
+                Userbase.getInstance().updateHost((Episode) currFile, currUser, ow);
             }
         }
         if (type.equals("nothing")) {
@@ -507,7 +522,8 @@ public final class Player {
                     currFile = ((Podcast) source).getEpisodes().get(currentObject);
                     timeremaining = currFile.getDuration();
                     currUser.updateWrapped("episode", currFile);
-                    Userbase.getInstance().updateHost((Episode) currFile, currUser,((Podcast) source).getOwner());
+                    String ow = ((Podcast) source).getOwner();
+                    Userbase.getInstance().updateHost((Episode) currFile, currUser, ow);
                 }
             }
             if (type.equals("playlist")) {
@@ -520,8 +536,9 @@ public final class Player {
                     currUser.updateWrapped("album", ((Song) currFile).getAlbum());
                     currUser.updateWrapped("genre", ((Song) currFile).getGenre());
                     currUser.updateWrapped("artist", ((Song) currFile).getArtist());
-                    Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
-                    Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
+                    String art = ((Song) currFile).getArtist();
+                    Userbase.getInstance().addStats(art, (Song) currFile);
+                    Userbase.getInstance().updateArt((Song) currFile, currUser, art);
                     addSg((Song) currFile);
                 }
             }
@@ -535,8 +552,9 @@ public final class Player {
                     currUser.updateWrapped("album", ((Song) currFile).getAlbum());
                     currUser.updateWrapped("genre", ((Song) currFile).getGenre());
                     currUser.updateWrapped("artist", ((Song) currFile).getArtist());
-                    Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
-                    Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
+                    String art = ((Song) currFile).getArtist();
+                    Userbase.getInstance().addStats(art, (Song) currFile);
+                    Userbase.getInstance().updateArt((Song) currFile, currUser, art);
                     addSg((Song) currFile);
                 }
             }
@@ -549,8 +567,9 @@ public final class Player {
                 currUser.updateWrapped("album", ((Song) currFile).getAlbum());
                 currUser.updateWrapped("genre", ((Song) currFile).getGenre());
                 currUser.updateWrapped("artist", ((Song) currFile).getArtist());
-                Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
-                Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
+                String art = ((Song) currFile).getArtist();
+                Userbase.getInstance().addStats(art, (Song) currFile);
+                Userbase.getInstance().updateArt((Song) currFile, currUser, art);
                 addSg((Song) currFile);
             }
             currentObject++;
@@ -560,7 +579,8 @@ public final class Player {
                 currFile = ((Podcast) source).getEpisodes().get(currentObject);
                 timeremaining = currFile.getDuration();
                 currUser.updateWrapped("episode", currFile);
-                Userbase.getInstance().updateHost((Episode) currFile, currUser,((Podcast) source).getOwner());
+                String ow = ((Podcast) source).getOwner();
+                Userbase.getInstance().updateHost((Episode) currFile, currUser, ow);
             }
             if (type.equals("playlist")) {
                 if (currentObject >= ((Playlist) source).getSongs().size()) {
@@ -572,8 +592,9 @@ public final class Player {
                 currUser.updateWrapped("album", ((Song) currFile).getAlbum());
                 currUser.updateWrapped("genre", ((Song) currFile).getGenre());
                 currUser.updateWrapped("artist", ((Song) currFile).getArtist());
-                Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
-                Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
+                String art = ((Song) currFile).getArtist();
+                Userbase.getInstance().addStats(art, (Song) currFile);
+                Userbase.getInstance().updateArt((Song) currFile, currUser, art);
                 addSg((Song) currFile);
             }
             if (type.equals("album")) {
@@ -586,8 +607,9 @@ public final class Player {
                 currUser.updateWrapped("album", ((Song) currFile).getAlbum());
                 currUser.updateWrapped("genre", ((Song) currFile).getGenre());
                 currUser.updateWrapped("artist", ((Song) currFile).getArtist());
-                Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
-                Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
+                String art = ((Song) currFile).getArtist();
+                Userbase.getInstance().addStats(art, (Song) currFile);
+                Userbase.getInstance().updateArt((Song) currFile, currUser, art);
                 addSg((Song) currFile);
             }
         }
@@ -598,15 +620,17 @@ public final class Player {
                 currUser.updateWrapped("album", ((Song) currFile).getAlbum());
                 currUser.updateWrapped("genre", ((Song) currFile).getGenre());
                 currUser.updateWrapped("artist", ((Song) currFile).getArtist());
-                Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
-                Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
+                String art = ((Song) currFile).getArtist();
+                Userbase.getInstance().addStats(art, (Song) currFile);
+                Userbase.getInstance().updateArt((Song) currFile, currUser, art);
                 addSg((Song) currFile);
             }
             if (type.equals("podcast")) {
                 currFile = ((Podcast) source).getEpisodes().get(currentObject);
                 timeremaining = currFile.getDuration();
                 currUser.updateWrapped("episode", currFile);
-                Userbase.getInstance().updateHost((Episode) currFile, currUser,((Podcast) source).getOwner());
+                String ow = ((Podcast) source).getOwner();
+                Userbase.getInstance().updateHost((Episode) currFile, currUser, ow);
             }
             if (type.equals("playlist")) {
                 currFile = ((Playlist) source).getSongs().get(order[currentObject]);
@@ -615,8 +639,9 @@ public final class Player {
                 currUser.updateWrapped("album", ((Song) currFile).getAlbum());
                 currUser.updateWrapped("genre", ((Song) currFile).getGenre());
                 currUser.updateWrapped("artist", ((Song) currFile).getArtist());
-                Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
-                Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
+                String art = ((Song) currFile).getArtist();
+                Userbase.getInstance().addStats(art, (Song) currFile);
+                Userbase.getInstance().updateArt((Song) currFile, currUser, art);
                 addSg((Song) currFile);
             }
             if (type.equals("album")) {
@@ -626,8 +651,9 @@ public final class Player {
                 currUser.updateWrapped("album", ((Song) currFile).getAlbum());
                 currUser.updateWrapped("genre", ((Song) currFile).getGenre());
                 currUser.updateWrapped("artist", ((Song) currFile).getArtist());
-                Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
-                Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
+                String art = ((Song) currFile).getArtist();
+                Userbase.getInstance().addStats(art, (Song) currFile);
+                Userbase.getInstance().updateArt((Song) currFile, currUser, art);
                 addSg((Song) currFile);
             }
         }
@@ -651,8 +677,9 @@ public final class Player {
             currUser.updateWrapped("album", ((Song) currFile).getAlbum());
             currUser.updateWrapped("genre", ((Song) currFile).getGenre());
             currUser.updateWrapped("artist", ((Song) currFile).getArtist());
-            Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
-            Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
+            String art = ((Song) currFile).getArtist();
+            Userbase.getInstance().addStats(art, (Song) currFile);
+            Userbase.getInstance().updateArt((Song) currFile, currUser, art);
             addSg((Song) currFile);
         } else {
             currentObject--;
@@ -660,7 +687,8 @@ public final class Player {
                 currFile = ((Podcast) source).getEpisodes().get(currentObject);
                 timeremaining = currFile.getDuration();
                 currUser.updateWrapped("episode", currFile);
-                Userbase.getInstance().updateHost((Episode) currFile, currUser,((Podcast) source).getOwner());
+                String ow = ((Podcast) source).getOwner();
+                Userbase.getInstance().updateHost((Episode) currFile, currUser, ow);
             }
             if (type.equals("playlist")) {
                 currFile = ((Playlist) source).getSongs().get(order[currentObject]);
@@ -669,8 +697,9 @@ public final class Player {
                 currUser.updateWrapped("album", ((Song) currFile).getAlbum());
                 currUser.updateWrapped("genre", ((Song) currFile).getGenre());
                 currUser.updateWrapped("artist", ((Song) currFile).getArtist());
-                Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
-                Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
+                String art = ((Song) currFile).getArtist();
+                Userbase.getInstance().addStats(art, (Song) currFile);
+                Userbase.getInstance().updateArt((Song) currFile, currUser, art);
                 addSg((Song) currFile);
             }
             if (type.equals("album")) {
@@ -680,13 +709,19 @@ public final class Player {
                 currUser.updateWrapped("album", ((Song) currFile).getAlbum());
                 currUser.updateWrapped("genre", ((Song) currFile).getGenre());
                 currUser.updateWrapped("artist", ((Song) currFile).getArtist());
-                Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
-                Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
+                String art = ((Song) currFile).getArtist();
+                Userbase.getInstance().addStats(art, (Song) currFile);
+                Userbase.getInstance().updateArt((Song) currFile, currUser, art);
                 addSg((Song) currFile);
             }
         }
     }
 
+    /**
+     * Function that plays an ad, give the respected artist
+     * their share of money and resets the song list between ads
+     * @param passedtime
+     */
     public void loadAd(final int passedtime) {
         timeremaining = ad.getDuration();
         Userbase ub = Userbase.getInstance();
@@ -699,7 +734,8 @@ public final class Player {
                         String crname = artd.getSongIncs().get(k).getSong().getName();
                         if (crname.equals(crSg.getName())) {
                             double inc = artd.getSongIncs().get(k).getInc();
-                            inc += (adrev / listSg.getTotalls()) * listSg.getSongs().get(i).getListen();
+                            int list = listSg.getSongs().get(i).getListen();
+                            inc += (adrev / listSg.getTotalls()) * list;
                             artd.getSongIncs().get(k).setInc(inc);
                             break;
                         }
@@ -720,8 +756,9 @@ public final class Player {
                 currUser.updateWrapped("album", ((Song) currFile).getAlbum());
                 currUser.updateWrapped("genre", ((Song) currFile).getGenre());
                 currUser.updateWrapped("artist", ((Song) currFile).getArtist());
-                Userbase.getInstance().addStats(((Song) currFile).getArtist(), (Song) currFile);
-                Userbase.getInstance().updateArt((Song) currFile, currUser, ((Song) currFile).getArtist());
+                String art = ((Song) currFile).getArtist();
+                Userbase.getInstance().addStats(art, (Song) currFile);
+                Userbase.getInstance().updateArt((Song) currFile, currUser, art);
                 addSg((Song) currFile);
             }
             nextAd = 0;
@@ -730,9 +767,15 @@ public final class Player {
         }
     }
 
+    /**
+     * Function that adds a song to the list of songs between adds
+     * This list will be used to decide which artist gets how much money
+     * he deserves
+     * @param sg
+     */
     public void addSg(final Song sg) {
         boolean exists = false;
-        if (currUser.isPremium) {
+        if (currUser.isPremium()) {
             return;
         }
         listSg.setTotalls(listSg.getTotalls() + 1);

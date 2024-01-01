@@ -489,56 +489,36 @@ class ResultPodcast extends CommandResults {
 }
 
 class ResultWrappedUser extends CommandResults {
-    final ObjectMapper mapper = new ObjectMapper();
+    private final ObjectMapper mapper = new ObjectMapper();
     class Result {
-        private ObjectNode topArtists = mapper.createObjectNode();
-        private ObjectNode topGenres = mapper.createObjectNode();
-        private ObjectNode topSongs = mapper.createObjectNode();
-        private ObjectNode topAlbums = mapper.createObjectNode();
-        private ObjectNode topEpisodes = mapper.createObjectNode();
+        private final ObjectNode topArtists = mapper.createObjectNode();
+        private final ObjectNode topGenres = mapper.createObjectNode();
+        private final ObjectNode topSongs = mapper.createObjectNode();
+        private final ObjectNode topAlbums = mapper.createObjectNode();
+        private final ObjectNode topEpisodes = mapper.createObjectNode();
 
         public ObjectNode getTopArtists() {
             return topArtists;
-        }
-
-        public void setTopArtists(ObjectNode topArtists) {
-            this.topArtists = topArtists;
         }
 
         public ObjectNode getTopGenres() {
             return topGenres;
         }
 
-        public void setTopGenres(ObjectNode topGenres) {
-            this.topGenres = topGenres;
-        }
-
         public ObjectNode getTopSongs() {
             return topSongs;
-        }
-
-        public void setTopSongs(ObjectNode topSongs) {
-            this.topSongs = topSongs;
         }
 
         public ObjectNode getTopAlbums() {
             return topAlbums;
         }
 
-        public void setTopAlbums(ObjectNode topAlbums) {
-            this.topAlbums = topAlbums;
-        }
-
         public ObjectNode getTopEpisodes() {
             return topEpisodes;
         }
-
-        public void setTopEpisodes(ObjectNode topEpisodes) {
-            this.topEpisodes = topEpisodes;
-        }
     }
 
-    Result result = new Result();
+    private Result result = new Result();
 
     ResultWrappedUser(final Command command, final User user) {
         super(command);
@@ -553,7 +533,8 @@ class ResultWrappedUser extends CommandResults {
         }
         LinkedList<User.Wrapped.PodcastListen> podcast = user.getWrapped().getTopEpisode();
         for (int i = 0; i < basecase && i < podcast.size(); i++) {
-            result.getTopEpisodes().put(podcast.get(i).getEpisode().getName(), podcast.get(i).getListen());
+            String name = podcast.get(i).getEpisode().getName();
+            result.getTopEpisodes().put(name, podcast.get(i).getListen());
         }
         LinkedList<User.Wrapped.GenreListen> genre = user.getWrapped().getTopGenre();
         for (int i = 0; i < basecase && i < genre.size(); i++) {
@@ -569,53 +550,41 @@ class ResultWrappedUser extends CommandResults {
         return result;
     }
 
-    public void setResult(Result result) {
+    public void setResult(final Result result) {
         this.result = result;
     }
 }
 
 class ResultWrappedArt extends CommandResults {
-    final ObjectMapper mapper = new ObjectMapper();
+    private final ObjectMapper mapper = new ObjectMapper();
     class Result {
-        private ObjectNode topAlbums = mapper.createObjectNode();
-        private ObjectNode topSongs = mapper.createObjectNode();
-        private LinkedList<String> topFans = new LinkedList<>();
+        private final ObjectNode topAlbums = mapper.createObjectNode();
+        private final ObjectNode topSongs = mapper.createObjectNode();
+        private final LinkedList<String> topFans = new LinkedList<>();
         private int listeners;
 
         public ObjectNode getTopAlbums() {
             return topAlbums;
         }
 
-        public void setTopAlbums(ObjectNode topAlbums) {
-            this.topAlbums = topAlbums;
-        }
-
         public ObjectNode getTopSongs() {
             return topSongs;
-        }
-
-        public void setTopSongs(ObjectNode topSongs) {
-            this.topSongs = topSongs;
         }
 
         public LinkedList<String> getTopFans() {
             return topFans;
         }
 
-        public void setTopFans(LinkedList<String> topFans) {
-            this.topFans = topFans;
-        }
-
         public int getListeners() {
             return listeners;
         }
 
-        public void setListeners(int listeners) {
+        public void setListeners(final int listeners) {
             this.listeners = listeners;
         }
     }
 
-    ResultWrappedArt.Result result = new ResultWrappedArt.Result();
+    private ResultWrappedArt.Result result = new ResultWrappedArt.Result();
 
     ResultWrappedArt(final Command command, final Artist artist) {
         super(command);
@@ -639,35 +608,31 @@ class ResultWrappedArt extends CommandResults {
         return result;
     }
 
-    public void setResult(Result result) {
+    public void setResult(final Result result) {
         this.result = result;
     }
 }
 
 class ResultWrappedHost extends CommandResults {
-    final ObjectMapper mapper = new ObjectMapper();
+    private final ObjectMapper mapper = new ObjectMapper();
     class Result {
-        private ObjectNode topEpisodes = mapper.createObjectNode();
+        private final ObjectNode topEpisodes = mapper.createObjectNode();
         private int listeners;
 
         public ObjectNode getTopEpisodes() {
             return topEpisodes;
         }
 
-        public void setTopEpisodes(ObjectNode topEpisodes) {
-            this.topEpisodes = topEpisodes;
-        }
-
         public int getListeners() {
             return listeners;
         }
 
-        public void setListeners(int listeners) {
+        public void setListeners(final int listeners) {
             this.listeners = listeners;
         }
     }
 
-    Result result = new Result();
+    private Result result = new Result();
 
     ResultWrappedHost(final Command command, final Host host) {
         super(command);
@@ -683,7 +648,7 @@ class ResultWrappedHost extends CommandResults {
         return result;
     }
 
-    public void setResult(Result result) {
+    public void setResult(final Result result) {
         this.result = result;
     }
 }
@@ -695,6 +660,7 @@ class ResultEnd {
 
     ResultEnd() {
         double inc;
+        final double whole = 100;
         Userbase userbase = Userbase.getInstance();
         Collections.sort(userbase.getArtistData());
         for (int i = 0; i < userbase.getArtistData().size(); i++) {
@@ -702,18 +668,19 @@ class ResultEnd {
             ObjectNode res = mapper.createObjectNode();
             ObjectNode finalRes = mapper.createObjectNode();
             inc = currArt.getMerchrev();
-            inc = Math.round(inc * 100.0) / 100.0;
-            finalRes.put("merchRevenue",inc);
+            inc = Math.round(inc * whole) / whole;
+            finalRes.put("merchRevenue", inc);
             inc = currArt.getSongrev();
-            inc = Math.round(inc * 100.0) / 100.0;
-            finalRes.put("songRevenue",inc);
+            inc = Math.round(inc * whole) / whole;
+            finalRes.put("songRevenue", inc);
             finalRes.put("ranking", i + 1);
             Collections.sort(currArt.getSongIncs());
             if (currArt.getSongIncs().isEmpty()) {
-                finalRes.put("mostProfitableSong","N/A");
+                finalRes.put("mostProfitableSong", "N/A");
             } else {
                 if (currArt.getSongIncs().get(0).getInc() != 0) {
-                    finalRes.put("mostProfitableSong", currArt.getSongIncs().get(0).getSong().getName());
+                    String name = currArt.getSongIncs().get(0).getSong().getName();
+                    finalRes.put("mostProfitableSong", name);
                 } else {
                     finalRes.put("mostProfitableSong", "N/A");
                 }
@@ -730,28 +697,28 @@ class ResultEnd {
         return result;
     }
 
-    public void setResult(ObjectNode result) {
+    public void setResult(final ObjectNode result) {
         this.result = result;
     }
 }
 
 class ResultNotification extends CommandResults {
-    LinkedList<notifObserv.Notification> notifications;
+    private LinkedList<NotifObserv.Notification> notifications;
     ResultNotification(final Command command) {
         super(command);
     }
 
-    public LinkedList<notifObserv.Notification> getNotifications() {
+    public LinkedList<NotifObserv.Notification> getNotifications() {
         return notifications;
     }
 
-    public void setNotifications(LinkedList<notifObserv.Notification> notifications) {
+    public void setNotifications(final LinkedList<NotifObserv.Notification> notifications) {
         this.notifications = notifications;
     }
 }
 
 class ResultMerch extends  CommandResults {
-    LinkedList<String> result;
+    private LinkedList<String> result;
     ResultMerch(final Command command) {
         super(command);
     }
@@ -760,7 +727,7 @@ class ResultMerch extends  CommandResults {
         return result;
     }
 
-    public void setResult(LinkedList<String> result) {
+    public void setResult(final LinkedList<String> result) {
         this.result = result;
     }
 }

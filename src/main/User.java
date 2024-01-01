@@ -16,8 +16,8 @@ interface Visitable  {
     ResultSwitch currentPage(Visitor v, Command command);
 }
 
-interface notifObserv {
-    static class Notification {
+interface NotifObserv {
+    class Notification {
         private String name;
         private String description;
 
@@ -25,7 +25,7 @@ interface notifObserv {
             return name;
         }
 
-        public void setName(String name) {
+        public void setName(final String name) {
             this.name = name;
         }
 
@@ -33,11 +33,11 @@ interface notifObserv {
             return description;
         }
 
-        public void setDescription(String description) {
+        public void setDescription(final String description) {
             this.description = description;
         }
     }
-    void addNotification(Notification Notific);
+    void addNotification(NotifObserv.Notification notific);
 }
 
 interface CommandPage {
@@ -45,7 +45,7 @@ interface CommandPage {
     void undo();
 }
 
-public class User implements Visitable, notifObserv{
+public class User implements Visitable, NotifObserv {
     private String username;
     private int age;
     private String city;
@@ -104,7 +104,7 @@ public class User implements Visitable, notifObserv{
     private LinkedList<PodcastInfo> podcastInfos = new LinkedList<PodcastInfo>();
 
     class Wrapped {
-        static class ArtistListen implements Comparable<ArtistListen>{
+        static class ArtistListen implements Comparable<ArtistListen> {
             private String artist;
             private int listen;
 
@@ -120,12 +120,12 @@ public class User implements Visitable, notifObserv{
                 return listen;
             }
 
-            public void setListen(int listen) {
+            public void setListen(final int listen) {
                 this.listen = listen;
             }
 
             @Override
-            public int compareTo(ArtistListen o) {
+            public int compareTo(final ArtistListen o) {
                 if (this.listen == o.getListen()) {
                     return this.artist.compareTo(o.getArtist());
                 } else {
@@ -134,7 +134,7 @@ public class User implements Visitable, notifObserv{
             }
         }
 
-        static class SongListen implements Comparable<SongListen>{
+        static class SongListen implements Comparable<SongListen> {
             private Song song;
             private int listen;
 
@@ -142,7 +142,7 @@ public class User implements Visitable, notifObserv{
                 return song;
             }
 
-            public void setSong(Song song) {
+            public void setSong(final Song song) {
                 this.song = song;
             }
 
@@ -150,12 +150,12 @@ public class User implements Visitable, notifObserv{
                 return listen;
             }
 
-            public void setListen(int listen) {
+            public void setListen(final int listen) {
                 this.listen = listen;
             }
 
             @Override
-            public int compareTo(SongListen o) {
+            public int compareTo(final SongListen o) {
                 if (this.listen == o.getListen()) {
                     return this.song.getName().compareTo(o.getSong().getName());
                 } else {
@@ -164,7 +164,7 @@ public class User implements Visitable, notifObserv{
             }
         }
 
-        static class GenreListen implements Comparable<GenreListen>{
+        static class GenreListen implements Comparable<GenreListen> {
             private String genre;
             private int listen;
 
@@ -172,7 +172,7 @@ public class User implements Visitable, notifObserv{
                 return genre;
             }
 
-            public void setGenre(String genre) {
+            public void setGenre(final String genre) {
                 this.genre = genre;
             }
 
@@ -180,12 +180,12 @@ public class User implements Visitable, notifObserv{
                 return listen;
             }
 
-            public void setListen(int listen) {
+            public void setListen(final int listen) {
                 this.listen = listen;
             }
 
             @Override
-            public int compareTo(GenreListen o) {
+            public int compareTo(final GenreListen o) {
                 if (this.listen == o.getListen()) {
                     return this.genre.compareTo(o.getGenre());
                 } else {
@@ -194,7 +194,7 @@ public class User implements Visitable, notifObserv{
             }
         }
 
-        static class AlbumListen implements Comparable<AlbumListen>{
+        static class AlbumListen implements Comparable<AlbumListen> {
             private String album;
             private int listen;
 
@@ -202,7 +202,7 @@ public class User implements Visitable, notifObserv{
                 return album;
             }
 
-            public void setAlbum(String album) {
+            public void setAlbum(final String album) {
                 this.album = album;
             }
 
@@ -210,12 +210,12 @@ public class User implements Visitable, notifObserv{
                 return listen;
             }
 
-            public void setListen(int listen) {
+            public void setListen(final int listen) {
                 this.listen = listen;
             }
 
             @Override
-            public int compareTo(AlbumListen o) {
+            public int compareTo(final AlbumListen o) {
                 if (this.listen == o.getListen()) {
                     return this.album.compareTo(o.getAlbum());
                 } else {
@@ -224,7 +224,7 @@ public class User implements Visitable, notifObserv{
             }
         }
 
-        static class PodcastListen implements Comparable<PodcastListen>{
+        static class PodcastListen implements Comparable<PodcastListen> {
             private Episode episode;
             private int listen;
 
@@ -232,7 +232,7 @@ public class User implements Visitable, notifObserv{
                 return episode;
             }
 
-            public void setEpisode(Episode episode) {
+            public void setEpisode(final Episode episode) {
                 this.episode = episode;
             }
 
@@ -240,12 +240,12 @@ public class User implements Visitable, notifObserv{
                 return listen;
             }
 
-            public void setListen(int listen) {
+            public void setListen(final int listen) {
                 this.listen = listen;
             }
 
             @Override
-            public int compareTo(PodcastListen o) {
+            public int compareTo(final PodcastListen o) {
                 if (this.listen == o.getListen()) {
                     return this.episode.getName().compareTo(o.getEpisode().getName());
                 } else {
@@ -264,7 +264,7 @@ public class User implements Visitable, notifObserv{
             return topArtist;
         }
 
-        public void setTopArtist(LinkedList<ArtistListen> topArtist) {
+        public void setTopArtist(final LinkedList<ArtistListen> topArtist) {
             this.topArtist = topArtist;
         }
 
@@ -272,7 +272,7 @@ public class User implements Visitable, notifObserv{
             return topAlbum;
         }
 
-        public void setTopAlbum(LinkedList<AlbumListen> topAlbum) {
+        public void setTopAlbum(final LinkedList<AlbumListen> topAlbum) {
             this.topAlbum = topAlbum;
         }
 
@@ -280,7 +280,7 @@ public class User implements Visitable, notifObserv{
             return topSong;
         }
 
-        public void setTopSong(LinkedList<SongListen> topSong) {
+        public void setTopSong(final LinkedList<SongListen> topSong) {
             this.topSong = topSong;
         }
 
@@ -288,7 +288,7 @@ public class User implements Visitable, notifObserv{
             return topEpisode;
         }
 
-        public void setTopEpisode(LinkedList<PodcastListen> topEpisode) {
+        public void setTopEpisode(final LinkedList<PodcastListen> topEpisode) {
             this.topEpisode = topEpisode;
         }
 
@@ -296,7 +296,7 @@ public class User implements Visitable, notifObserv{
             return topGenre;
         }
 
-        public void setTopGenre(LinkedList<GenreListen> topGenre) {
+        public void setTopGenre(final LinkedList<GenreListen> topGenre) {
             this.topGenre = topGenre;
         }
     }
@@ -316,7 +316,7 @@ public class User implements Visitable, notifObserv{
             return songs;
         }
 
-        public void setSongs(LinkedList<Wrapped.SongListen> songs) {
+        public void setSongs(final LinkedList<Wrapped.SongListen> songs) {
             this.songs = songs;
         }
 
@@ -324,14 +324,14 @@ public class User implements Visitable, notifObserv{
             return totalls;
         }
 
-        public void setTotalls(int totalls) {
+        public void setTotalls(final int totalls) {
             this.totalls = totalls;
         }
     }
 
-    final Premium premium = new Premium();
-    boolean isPremium = false;
-    LinkedList<String> mymerch = new LinkedList<>();
+    private final Premium premium = new Premium();
+    private boolean isPremium = false;
+    private LinkedList<String> mymerch = new LinkedList<>();
 
     class PageHistory {
         static class Page implements CommandPage {
@@ -364,7 +364,7 @@ public class User implements Visitable, notifObserv{
                 return nextPage;
             }
 
-            public void setNextPage(String nextPage) {
+            public void setNextPage(final String nextPage) {
                 this.nextPage = nextPage;
             }
 
@@ -372,7 +372,7 @@ public class User implements Visitable, notifObserv{
                 return prevPage;
             }
 
-            public void setPrevPage(String prevPage) {
+            public void setPrevPage(final String prevPage) {
                 this.prevPage = prevPage;
             }
 
@@ -380,7 +380,7 @@ public class User implements Visitable, notifObserv{
                 return nextUser;
             }
 
-            public void setNextUser(User nextUser) {
+            public void setNextUser(final User nextUser) {
                 this.nextUser = nextUser;
             }
 
@@ -388,7 +388,7 @@ public class User implements Visitable, notifObserv{
                 return prevUser;
             }
 
-            public void setPrevUser(User prevUser) {
+            public void setPrevUser(final User prevUser) {
                 this.prevUser = prevUser;
             }
 
@@ -396,14 +396,14 @@ public class User implements Visitable, notifObserv{
                 return user;
             }
 
-            public void setUser(User user) {
+            public void setUser(final User user) {
                 this.user = user;
             }
         }
-        LinkedList<Page> undoLs = new LinkedList<>();
-        LinkedList<Page> redoLs = new LinkedList<>();
+        private LinkedList<Page> undoLs = new LinkedList<>();
+        private LinkedList<Page> redoLs = new LinkedList<>();
 
-        void ResetRedoLs() {
+        void resetRedoLs() {
             redoLs = new LinkedList<>();
         }
 
@@ -429,7 +429,7 @@ public class User implements Visitable, notifObserv{
             return undoLs;
         }
 
-        public void setUndoLs(LinkedList<Page> undoLs) {
+        public void setUndoLs(final LinkedList<Page> undoLs) {
             this.undoLs = undoLs;
         }
 
@@ -437,15 +437,15 @@ public class User implements Visitable, notifObserv{
             return redoLs;
         }
 
-        public void setRedoLs(LinkedList<Page> redoLs) {
+        public void setRedoLs(final LinkedList<Page> redoLs) {
             this.redoLs = redoLs;
         }
     }
 
-    PageHistory pageHistory = new PageHistory();
+    private PageHistory pageHistory = new PageHistory();
 
     class TopGenres {
-        class GenreLike implements Comparable<GenreLike>{
+        class GenreLike implements Comparable<GenreLike> {
             private String genre;
             private int likes;
 
@@ -453,7 +453,7 @@ public class User implements Visitable, notifObserv{
                 return genre;
             }
 
-            public void setGenre(String genre) {
+            public void setGenre(final String genre) {
                 this.genre = genre;
             }
 
@@ -461,12 +461,12 @@ public class User implements Visitable, notifObserv{
                 return likes;
             }
 
-            public void setLikes(int likes) {
+            public void setLikes(final int likes) {
                 this.likes = likes;
             }
 
             @Override
-            public int compareTo(GenreLike o) {
+            public int compareTo(final GenreLike o) {
                 if (o.getLikes() == likes) {
                     return -(o.getGenre().compareTo(genre));
                 } else {
@@ -498,12 +498,12 @@ public class User implements Visitable, notifObserv{
             return genres;
         }
 
-        public void setGenres(LinkedList<GenreLike> genres) {
+        public void setGenres(final LinkedList<GenreLike> genres) {
             this.genres = genres;
         }
     }
 
-    TopGenres topGenres = new TopGenres();
+    private TopGenres topGenres = new TopGenres();
     private LinkedList<Song> genre1 = new LinkedList<>();
     private LinkedList<Song> genre2 = new LinkedList<>();
     private LinkedList<Song> genre3 = new LinkedList<>();
@@ -624,7 +624,8 @@ public class User implements Visitable, notifObserv{
             for (int i = 0; i < Library.getInstance().getSongs().size(); i++) {
                 Song currSong = Library.getInstance().getSongs().get(i);
                 if (filters.get("name") != null) {
-                    if (!currSong.getName().toLowerCase().startsWith(filters.get("name").textValue().toLowerCase())) {
+                    String name = filters.get("name").textValue().toLowerCase();
+                    if (!currSong.getName().toLowerCase().startsWith(name)) {
                         continue;
                     }
                 }
@@ -868,7 +869,7 @@ public class User implements Visitable, notifObserv{
             Artist art = (Artist) searcheditems.get(command.getItemNumber() - 1);
             PageHistory.Page newPage = new PageHistory.Page(art, "ArtistPage", this);
             newPage.execute();
-            pageHistory.ResetRedoLs();
+            pageHistory.resetRedoLs();
             pageHistory.getUndoLs().addLast(newPage);
         }
         if (lastsearch.equals("host")) {
@@ -877,7 +878,7 @@ public class User implements Visitable, notifObserv{
             Host art = (Host) searcheditems.get(command.getItemNumber() - 1);
             PageHistory.Page newPage = new PageHistory.Page(art, "HostPage", this);
             newPage.execute();
-            pageHistory.ResetRedoLs();
+            pageHistory.resetRedoLs();
             pageHistory.getUndoLs().addLast(newPage);
         }
         if (lastsearch.equals("album")) {
@@ -912,8 +913,9 @@ public class User implements Visitable, notifObserv{
             updateWrapped("artist", ((Song) selectedItem).getArtist());
             updateWrapped("genre", ((Song) selectedItem).getGenre());
             updateWrapped("album", ((Song) selectedItem).getAlbum());
-            Userbase.getInstance().addStats(((Song) selectedItem).getArtist(), (Song) selectedItem);
-            Userbase.getInstance().updateArt((Song) selectedItem, this, ((Song) selectedItem).getArtist());
+            String art = ((Song) selectedItem).getArtist();
+            Userbase.getInstance().addStats(art, (Song) selectedItem);
+            Userbase.getInstance().updateArt((Song) selectedItem, this, art);
             player.addSg((Song) selectedItem);
         }
         if (lastsearch.equals("playlist")) {
@@ -1522,17 +1524,23 @@ public class User implements Visitable, notifObserv{
         if (command.getNextPage().equals("Home")) {
             newPage.setNextUser(this);
             newPage.setNextPage("HomePage");
-        } else if (command.getNextPage().equals("LikedContent")){
+        } else if (command.getNextPage().equals("LikedContent")) {
             newPage.setNextUser(this);
             newPage.setNextPage("LikedContentPage");
         }
         newPage.execute();
-        pageHistory.ResetRedoLs();
+        pageHistory.resetRedoLs();
         pageHistory.getUndoLs().addLast(newPage);
         result.setMessage(username + " accessed " + command.getNextPage() + " successfully.");
         return  result;
     }
 
+    /**
+     * This method sets the current page of the user to what is next
+     * in the redols list
+     * @param command
+     * @return
+     */
     public ResultSwitch nextPage(final Command command) {
         ResultSwitch result = new ResultSwitch(command);
         if (pageHistory.getRedoLs().isEmpty()) {
@@ -1544,6 +1552,11 @@ public class User implements Visitable, notifObserv{
         return result;
     }
 
+    /**
+     * Sets the current page to what the previous page was
+     * @param command
+     * @return
+     */
     public ResultSwitch previousPage(final Command command) {
         ResultSwitch result = new ResultSwitch(command);
         if (pageHistory.getUndoLs().isEmpty()) {
@@ -1551,7 +1564,9 @@ public class User implements Visitable, notifObserv{
             return result;
         }
         pageHistory.undo();
-        result.setMessage("The user " + username + " has navigated successfully to the previous page.");
+        String message = "The user " + username;
+        message += " has navigated successfully to the previous page.";
+        result.setMessage(message);
         return result;
     }
 
@@ -1581,9 +1596,15 @@ public class User implements Visitable, notifObserv{
         return v.visit(currUserrPage, command);
     }
 
-    public void updateWrapped(String type, Object obj) {
+    /**
+     * Updates the wrapper of the user depending on what type of
+     * object it gets as parameter
+     * @param typeob
+     * @param obj
+     */
+    public void updateWrapped(final String typeob, final Object obj) {
         boolean exists = false;
-        if (type.equals("song")) {
+        if (typeob.equals("song")) {
             Song currSong = (Song) obj;
             for (int i = 0; i < wrapped.getTopSong().size(); i++) {
                 Song wrsg = wrapped.getTopSong().get(i).getSong();
@@ -1619,7 +1640,7 @@ public class User implements Visitable, notifObserv{
             }
             return;
         }
-        if (type.equals("album")) {
+        if (typeob.equals("album")) {
             String currAlb = (String) obj;
             for (int i = 0; i < wrapped.getTopAlbum().size(); i++) {
                 String wral = wrapped.getTopAlbum().get(i).getAlbum();
@@ -1637,7 +1658,7 @@ public class User implements Visitable, notifObserv{
             }
             return;
         }
-        if (type.equals("episode")) {
+        if (typeob.equals("episode")) {
             Episode currPod = (Episode) obj;
             for (int i = 0; i < wrapped.getTopEpisode().size(); i++) {
                 Episode wrpd = wrapped.getTopEpisode().get(i).getEpisode();
@@ -1655,7 +1676,7 @@ public class User implements Visitable, notifObserv{
             }
             return;
         }
-        if (type.equals("artist")) {
+        if (typeob.equals("artist")) {
             String currArt = (String) obj;
             for (int i = 0; i < wrapped.getTopArtist().size(); i++) {
                 String wrat = wrapped.getTopArtist().get(i).getArtist();
@@ -1673,7 +1694,7 @@ public class User implements Visitable, notifObserv{
             }
             return;
         }
-        if (type.equals("genre")) {
+        if (typeob.equals("genre")) {
             String currGen = (String) obj;
             for (int i = 0; i < wrapped.getTopGenre().size(); i++) {
                 String wrgn = wrapped.getTopGenre().get(i).getGenre();
@@ -1692,6 +1713,11 @@ public class User implements Visitable, notifObserv{
         }
     }
 
+    /**
+     * Returns the wrapper of the current user
+     * @param command
+     * @return
+     */
     public CommandResults printWrapped(final Command command) {
         player.status(command);
         int tot = wrapped.getTopAlbum().size();
@@ -1713,6 +1739,11 @@ public class User implements Visitable, notifObserv{
         return result;
     }
 
+    /**
+     * Sets the curent user to premium after updating its player
+     * @param command
+     * @return
+     */
     public ResultSwitch buyPremium(final Command command) {
         ResultSwitch result = new ResultSwitch(command);
         updatePlayer(command);
@@ -1730,9 +1761,16 @@ public class User implements Visitable, notifObserv{
         return result;
     }
 
+    /**
+     * Sets the current user to standard after updating his premium and paying
+     * the respective artists
+     * @param command
+     * @return
+     */
     public ResultSwitch cancelPremium(final Command command) {
         ResultSwitch result = new ResultSwitch(command);
         updatePlayer(command);
+        final double prpr = 1000000;
         if (type != 0) {
             result.setMessage(username + " is not a normal user.");
             return result;
@@ -1751,13 +1789,15 @@ public class User implements Visitable, notifObserv{
                         String crname = artd.getSongIncs().get(k).getSong().getName();
                         if (crname.equals(crSg.getName())) {
                             double inc = artd.getSongIncs().get(k).getInc();
-                            inc += ((double) 1000000 / premium.getTotalls()) * premium.getSongs().get(i).getListen();
+                            int ls = premium.getSongs().get(i).getListen();
+                            inc += ((double) prpr / premium.getTotalls()) * ls;
                             artd.getSongIncs().get(k).setInc(inc);
                             break;
                         }
                     }
                     double inc = artd.getSongrev();
-                    inc += ((double) 1000000 / premium.getTotalls()) * premium.getSongs().get(i).getListen();
+                    int ls = premium.getSongs().get(i).getListen();
+                    inc += ((double) prpr / premium.getTotalls()) * ls;
                     artd.setSongrev(inc);
                     break;
                 }
@@ -1768,6 +1808,11 @@ public class User implements Visitable, notifObserv{
         return result;
     }
 
+    /**
+     * Sets an ad Break for the user after updating his player
+     * @param command
+     * @return
+     */
     public ResultSwitch adBreak(final Command command) {
         ResultSwitch res = new ResultSwitch(command);
         updatePlayer(command);
@@ -1788,11 +1833,20 @@ public class User implements Visitable, notifObserv{
         return res;
     }
 
+    /**
+     * Adds a notification to the current user
+     * @param notific
+     */
     @Override
-    public void addNotification(Notification Notific) {
-        notifications.addLast(Notific);
+    public void addNotification(final Notification notific) {
+        notifications.addLast(notific);
     }
 
+    /**
+     * Gets all the notifications of the current user
+     * @param command
+     * @return
+     */
     public ResultNotification getNotif(final Command command) {
         ResultNotification res = new ResultNotification(command);
         res.setNotifications(notifications);
@@ -1800,6 +1854,11 @@ public class User implements Visitable, notifObserv{
         return res;
     }
 
+    /**
+     * Subscribes the user to the artist that he is currently on the page of
+     * @param command
+     * @return
+     */
     public ResultSwitch subscribe(final Command command) {
         ResultSwitch result = new ResultSwitch(command);
         if (isOffline()) {
@@ -1811,7 +1870,9 @@ public class User implements Visitable, notifObserv{
             return result;
         }
         if (!currentPage.equals("HostPage") && !currentPage.equals("ArtistPage")) {
-            result.setMessage("To subscribe you need to be on the page of an artist or host.");
+            String msg = "To subscribe you need to be on the";
+            msg += " page of an artist or host.";
+            result.setMessage(msg);
             return result;
         }
         if (currentPage.equals("ArtistPage")) {
@@ -1819,7 +1880,8 @@ public class User implements Visitable, notifObserv{
             int index = art.searchSubscr(this.username);
             if (index != -1) {
                 art.getSubscribers().remove(index);
-                result.setMessage(username + " unsubscribed from " + art.getUsername() + " successfully.");
+                String msg = username + " unsubscribed from ";
+                result.setMessage(msg + art.getUsername() + " successfully.");
                 return result;
             }
             art.getSubscribers().addLast(this);
@@ -1830,7 +1892,8 @@ public class User implements Visitable, notifObserv{
         int index = host.searchSubscr(this.username);
         if (index != -1) {
             host.getSubscribers().remove(index);
-            result.setMessage(username + " unsubscribed from " +host.getUsername() + " successfully.");
+            String msg = username + " unsubscribed from ";
+            result.setMessage(msg + host.getUsername() + " successfully.");
             return result;
         }
         host.getSubscribers().addLast(this);
@@ -1838,6 +1901,11 @@ public class User implements Visitable, notifObserv{
         return result;
     }
 
+    /**
+     * Buys a piece of merch for the user and pays the respective artist
+     * @param command
+     * @return
+     */
     public ResultSwitch buyMerch(final Command command) {
         ResultSwitch result = new ResultSwitch(command);
         if (!currentPage.equals("ArtistPage")) {
@@ -1866,6 +1934,11 @@ public class User implements Visitable, notifObserv{
         return result;
     }
 
+    /**
+     * Returns a list with the merch of the current user
+     * @param command
+     * @return
+     */
     public ResultMerch seeMerch(final Command command) {
         ResultMerch result = new ResultMerch(command);
         LinkedList<String> results = new LinkedList<>();
@@ -1876,6 +1949,10 @@ public class User implements Visitable, notifObserv{
         return result;
     }
 
+    /**
+     * Updates the 3 lists with the songs of the top 3 genres
+     * listened by the user
+     */
     public void updateTopGenres() {
         topGenres.setGenres(new LinkedList<>());
         for (int i = 0; i < preferedSongs.size(); i++) {
@@ -1922,9 +1999,15 @@ public class User implements Visitable, notifObserv{
         Collections.sort(genre3);
     }
 
+    /**
+     * Updates the recommendations of the user
+     * @param command
+     * @return
+     */
     public ResultSwitch updateRecom(final Command command) {
         ResultSwitch result = new ResultSwitch(command);
         updatePlayer(command);
+        final int pstm = 30;
         if (command.getRecommendationType().equals("random_song")) {
             if (!player.getType().equals("song")) {
                 result.setMessage("No new recommendations were found");
@@ -1932,7 +2015,7 @@ public class User implements Visitable, notifObserv{
             }
             int passed = ((Song) player.getCurrFile()).getDuration();
             passed -= player.getTimeremaining();
-            if (passed < 30) {
+            if (passed < pstm) {
                 result.setMessage("No new recommendations were found");
                 return result;
             }
@@ -1955,7 +2038,8 @@ public class User implements Visitable, notifObserv{
                 }
             }
             recSongs.addLast(sg);
-            result.setMessage("The recommendations for user " + username + " have been updated successfully.");
+            String msg = "The recommendations for user " + username;
+            result.setMessage(msg + " have been updated successfully.");
             lastAddRecom = "song";
             return result;
         }
@@ -1995,7 +2079,7 @@ public class User implements Visitable, notifObserv{
                 if (user == null) {
                     break;
                 }
-                int nr2 = 5;
+                int nr2 = nr;
                 genre1 = new LinkedList<>();
                 for (int j = 0; j < user.getPreferedSongs().size(); j++) {
                     genre1.addLast(user.getPreferedSongs().get(j));
@@ -2021,7 +2105,8 @@ public class User implements Visitable, notifObserv{
             }
             playlist.setName(art.getUsername() + " Fan Club recommendations");
             recPlaylist.addLast(playlist);
-            result.setMessage("The recommendations for user " + username + " have been updated successfully.");
+            String msg = "The recommendations for user " + username;
+            result.setMessage(msg + " have been updated successfully.");
             lastAddRecom = "playlist";
             return result;
         }
@@ -2049,11 +2134,17 @@ public class User implements Visitable, notifObserv{
             }
         }
         recPlaylist.addLast(playlist);
-        result.setMessage("The recommendations for user " + username + " have been updated successfully.");
+        String msg = "The recommendations for user " + username;
+        result.setMessage(msg + " have been updated successfully.");
         lastAddRecom = "playlist";
         return result;
     }
 
+    /**
+     * Loads the last thing that was recommended to the user
+     * @param command
+     * @return
+     */
     public ResultLoad loadRecom(final Command command) {
         ResultLoad result = new ResultLoad(command);
         if (isOffline()) {
@@ -2258,71 +2349,131 @@ public class User implements Visitable, notifObserv{
         this.currUserrPage = currUserrPage;
     }
 
+    /**
+     * Gets the user`s wrapper
+     * @return
+     */
     public Wrapped getWrapped() {
         return wrapped;
     }
 
-    public void setWrapped(Wrapped wrapped) {
+    /**
+     * Sets the users wrapper
+     * @param wrapped
+     */
+    public void setWrapped(final Wrapped wrapped) {
         this.wrapped = wrapped;
     }
 
+    /**
+     * Gets the users notifications
+     * @return
+     */
     public LinkedList<Notification> getNotifications() {
         return notifications;
     }
 
-    public void setNotifications(LinkedList<Notification> notifications) {
+    /**
+     * Sets the users notifications
+     * @param notifications
+     */
+    public void setNotifications(final LinkedList<Notification> notifications) {
         this.notifications = notifications;
     }
 
-    public Premium getPremium() {
-        return premium;
-    }
-
+    /**
+     * Return if the user is premium
+     * @return
+     */
     public boolean isPremium() {
         return isPremium;
     }
 
-    public void setPremium(boolean premium) {
+    /**
+     * Sets the user as premium
+     * @param premium
+     */
+    public void setPremium(final boolean premium) {
         isPremium = premium;
     }
 
+    /**
+     * Gets the users merch
+     * @return
+     */
     public LinkedList<String> getMymerch() {
         return mymerch;
     }
 
-    public void setMymerch(LinkedList<String> mymerch) {
+    /**
+     * Sets the users merch
+     * @param mymerch
+     */
+    public void setMymerch(final LinkedList<String> mymerch) {
         this.mymerch = mymerch;
     }
 
+    /**
+     * Returns the page history
+     * @return
+     */
     public PageHistory getPageHistory() {
         return pageHistory;
     }
 
-    public void setPageHistory(PageHistory pageHistory) {
+    /**
+     * Sets the users pagehistory
+     * @param pageHistory
+     */
+    public void setPageHistory(final PageHistory pageHistory) {
         this.pageHistory = pageHistory;
     }
 
+    /**
+     * Returns the top Genres of the user
+     * @return
+     */
     public TopGenres getTopGenres() {
         return topGenres;
     }
 
-    public void setTopGenres(TopGenres topGenres) {
+    /**
+     * Sets the top genres of the user
+     * @param topGenres
+     */
+    public void setTopGenres(final TopGenres topGenres) {
         this.topGenres = topGenres;
     }
 
+    /**
+     * Returns the recommended songs of the user
+     * @return
+     */
     public LinkedList<Song> getRecSongs() {
         return recSongs;
     }
 
-    public void setRecSongs(LinkedList<Song> recSongs) {
+    /**
+     * Sets the recommended songs of the user
+     * @param recSongs
+     */
+    public void setRecSongs(final LinkedList<Song> recSongs) {
         this.recSongs = recSongs;
     }
 
+    /**
+     * Returns the recommended playlists of the user
+     * @return
+     */
     public LinkedList<Playlist> getRecPlaylist() {
         return recPlaylist;
     }
 
-    public void setRecPlaylist(LinkedList<Playlist> recPlaylist) {
+    /**
+     * Sets the recommended playlists of the user
+     * @param recPlaylist
+     */
+    public void setRecPlaylist(final LinkedList<Playlist> recPlaylist) {
         this.recPlaylist = recPlaylist;
     }
 }
@@ -2397,7 +2548,7 @@ final class Artist extends User {
     private LinkedList<Merch> merch = new LinkedList<Merch>();
 
     class Wrapped {
-        static class SongListen implements Comparable<SongListen>{
+        static class SongListen implements Comparable<SongListen> {
             private String song;
             private int listen;
 
@@ -2405,7 +2556,7 @@ final class Artist extends User {
                 return song;
             }
 
-            public void setSong(String song) {
+            public void setSong(final String song) {
                 this.song = song;
             }
 
@@ -2413,12 +2564,12 @@ final class Artist extends User {
                 return listen;
             }
 
-            public void setListen(int listen) {
+            public void setListen(final int listen) {
                 this.listen = listen;
             }
 
             @Override
-            public int compareTo(SongListen o) {
+            public int compareTo(final SongListen o) {
                 if (o.getListen() - listen == 0) {
                     return -(o.getSong().compareTo(song));
                 } else {
@@ -2427,7 +2578,7 @@ final class Artist extends User {
             }
         }
 
-        static class AlbumListen implements Comparable<AlbumListen>{
+        static class AlbumListen implements Comparable<AlbumListen> {
             private String album;
             private int listen;
 
@@ -2435,7 +2586,7 @@ final class Artist extends User {
                 return album;
             }
 
-            public void setAlbum(String album) {
+            public void setAlbum(final String album) {
                 this.album = album;
             }
 
@@ -2443,12 +2594,12 @@ final class Artist extends User {
                 return listen;
             }
 
-            public void setListen(int listen) {
+            public void setListen(final int listen) {
                 this.listen = listen;
             }
 
             @Override
-            public int compareTo(AlbumListen o) {
+            public int compareTo(final AlbumListen o) {
                 if (o.getListen() - listen == 0) {
                     return -(o.getAlbum().compareTo(album));
                 } else {
@@ -2457,7 +2608,7 @@ final class Artist extends User {
             }
         }
 
-        static class UserListen implements Comparable<UserListen>{
+        static class UserListen implements Comparable<UserListen> {
             private String user;
             private int listen;
 
@@ -2465,7 +2616,7 @@ final class Artist extends User {
                 return user;
             }
 
-            public void setUser(String user) {
+            public void setUser(final String user) {
                 this.user = user;
             }
 
@@ -2473,12 +2624,12 @@ final class Artist extends User {
                 return listen;
             }
 
-            public void setListen(int listen) {
+            public void setListen(final int listen) {
                 this.listen = listen;
             }
 
             @Override
-            public int compareTo(UserListen o) {
+            public int compareTo(final UserListen o) {
                 if (o.getListen() - listen == 0) {
                     return -(o.getUser().compareTo(user));
                 } else {
@@ -2487,15 +2638,15 @@ final class Artist extends User {
             }
         }
 
-        LinkedList<SongListen> songListens = new LinkedList<>();
-        LinkedList<AlbumListen> albumListens = new LinkedList<>();
-        LinkedList<UserListen> userListens = new LinkedList<>();
+        private LinkedList<SongListen> songListens = new LinkedList<>();
+        private LinkedList<AlbumListen> albumListens = new LinkedList<>();
+        private LinkedList<UserListen> userListens = new LinkedList<>();
 
         public LinkedList<SongListen> getSongListens() {
             return songListens;
         }
 
-        public void setSongListens(LinkedList<SongListen> songListens) {
+        public void setSongListens(final LinkedList<SongListen> songListens) {
             this.songListens = songListens;
         }
 
@@ -2503,7 +2654,7 @@ final class Artist extends User {
             return albumListens;
         }
 
-        public void setAlbumListens(LinkedList<AlbumListen> albumListens) {
+        public void setAlbumListens(final LinkedList<AlbumListen> albumListens) {
             this.albumListens = albumListens;
         }
 
@@ -2511,12 +2662,12 @@ final class Artist extends User {
             return userListens;
         }
 
-        public void setUserListens(LinkedList<UserListen> userListens) {
+        public void setUserListens(final LinkedList<UserListen> userListens) {
             this.userListens = userListens;
         }
     }
 
-    Wrapped wrappedartist = new Wrapped();
+    private Wrapped wrappedartist = new Wrapped();
 
     Artist(final Command command) {
         super(command);
@@ -2629,14 +2780,19 @@ final class Artist extends User {
         return result;
     }
 
-    public void updateWrapped(User currUser, Song currSong) {
+    /**
+     * Updates the wrapper of the artist
+     * @param currUser
+     * @param currSong
+     */
+    public void updateWrapped(final User currUser, final Song currSong) {
         boolean found = false;
         for (int i = 0; i < wrappedartist.albumListens.size(); i++) {
             String name = wrappedartist.albumListens.get(i).getAlbum();
             if (name.equals(currSong.getAlbum())) {
                 int nr = wrappedartist.albumListens.get(i).getListen();
                 wrappedartist.albumListens.get(i).setListen(nr + 1);
-                found=true;
+                found = true;
                 break;
             }
         }
@@ -2652,7 +2808,7 @@ final class Artist extends User {
             if (name.equals(currSong.getName())) {
                 int nr = wrappedartist.songListens.get(i).getListen();
                 wrappedartist.songListens.get(i).setListen(nr + 1);
-                found=true;
+                found = true;
                 break;
             }
         }
@@ -2668,7 +2824,7 @@ final class Artist extends User {
             if (name.equals(currUser.getUsername())) {
                 int nr = wrappedartist.userListens.get(i).getListen();
                 wrappedartist.userListens.get(i).setListen(nr + 1);
-                found=true;
+                found = true;
                 break;
             }
         }
@@ -2680,6 +2836,11 @@ final class Artist extends User {
         }
     }
 
+    /**
+     * Prints the wrapper of the artist
+     * @param command
+     * @return
+     */
     public CommandResults wrappedArt(final Command command) {
         Userbase userbase = Userbase.getInstance();
         for (int i = 0; i < userbase.getUserbase().size(); i++) {
@@ -2703,6 +2864,11 @@ final class Artist extends User {
         return result;
     }
 
+    /**
+     * Searches for a given subscriber
+     * @param name
+     * @return
+     */
     public int searchSubscr(final String name) {
         for (int i = 0; i < subscribers.size(); i++) {
             if (subscribers.get(i).getUsername().equals(name)) {
@@ -2748,7 +2914,7 @@ final class Artist extends User {
         return wrappedartist;
     }
 
-    public void setWrappedartist(Wrapped wrappedartist) {
+    public void setWrappedartist(final Wrapped wrappedartist) {
         this.wrappedartist = wrappedartist;
     }
 
@@ -2756,7 +2922,7 @@ final class Artist extends User {
         return subscribers;
     }
 
-    public void setSubscribers(LinkedList<User> subscribers) {
+    public void setSubscribers(final LinkedList<User> subscribers) {
         this.subscribers = subscribers;
     }
 }
@@ -2789,7 +2955,7 @@ final class Host extends User {
     private LinkedList<Announcement> announcements = new LinkedList<Announcement>();
 
     class WrappedHost {
-        static class EpisodeListen implements Comparable<EpisodeListen>{
+        static class EpisodeListen implements Comparable<EpisodeListen> {
             private String episode;
             private int listen;
 
@@ -2797,7 +2963,7 @@ final class Host extends User {
                 return episode;
             }
 
-            public void setEpisode(String episode) {
+            public void setEpisode(final String episode) {
                 this.episode = episode;
             }
 
@@ -2805,12 +2971,12 @@ final class Host extends User {
                 return listen;
             }
 
-            public void setListen(int listen) {
+            public void setListen(final int listen) {
                 this.listen = listen;
             }
 
             @Override
-            public int compareTo(EpisodeListen o) {
+            public int compareTo(final EpisodeListen o) {
                 if (o.getListen() == listen) {
                     return -(o.getEpisode().compareTo(episode));
                 } else {
@@ -2825,7 +2991,7 @@ final class Host extends User {
             return episodes;
         }
 
-        public void setEpisodes(LinkedList<EpisodeListen> episodes) {
+        public void setEpisodes(final LinkedList<EpisodeListen> episodes) {
             this.episodes = episodes;
         }
 
@@ -2833,7 +2999,7 @@ final class Host extends User {
             return users;
         }
 
-        public void setUsers(LinkedList<String> users) {
+        public void setUsers(final LinkedList<String> users) {
             this.users = users;
         }
     }
@@ -2904,6 +3070,11 @@ final class Host extends User {
         return result;
     }
 
+    /**
+     * Searches for a subscriber of the host
+     * @param name
+     * @return
+     */
     public int searchSubscr(final String name) {
         for (int i = 0; i < subscribers.size(); i++) {
             if (subscribers.get(i).getUsername().equals(name)) {
@@ -2913,6 +3084,11 @@ final class Host extends User {
         return -1;
     }
 
+    /**
+     * Updates the wrapper of the host
+     * @param episode
+     * @param user
+     */
     public void updateWrapped(final Episode episode, final User user) {
         String name = episode.getName();
         boolean found = false;
@@ -2943,6 +3119,11 @@ final class Host extends User {
         }
     }
 
+    /**
+     * Prints the wrapper of the host
+     * @param command
+     * @return
+     */
     public ResultWrappedHost printWrappedHost(final Command command) {
         Collections.sort(wrapped.getEpisodes());
         ResultWrappedHost result = new ResultWrappedHost(command, this);
@@ -2969,7 +3150,7 @@ final class Host extends User {
         return subscribers;
     }
 
-    public void setSubscribers(LinkedList<User> subscribers) {
+    public void setSubscribers(final LinkedList<User> subscribers) {
         this.subscribers = subscribers;
     }
 
@@ -2977,7 +3158,7 @@ final class Host extends User {
         return wrapped;
     }
 
-    public void setWrappedHost(WrappedHost wrapped) {
+    public void setWrappedHost(final WrappedHost wrapped) {
         this.wrapped = wrapped;
     }
 }

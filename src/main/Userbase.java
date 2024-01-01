@@ -8,8 +8,8 @@ public final class Userbase {
     private static final Userbase INSTANCE = new Userbase();
     private LinkedList<User> userbase = new LinkedList<User>();
 
-    static class ArtistData implements Comparable<ArtistData>{
-        static class SongInc implements Comparable<SongInc>{
+    static class ArtistData implements Comparable<ArtistData> {
+        static class SongInc implements Comparable<SongInc> {
             private Song song;
             private double inc;
 
@@ -17,7 +17,7 @@ public final class Userbase {
                 return song;
             }
 
-            public void setSong(Song song) {
+            public void setSong(final Song song) {
                 this.song = song;
             }
 
@@ -25,12 +25,12 @@ public final class Userbase {
                 return inc;
             }
 
-            public void setInc(double inc) {
+            public void setInc(final double inc) {
                 this.inc = inc;
             }
 
             @Override
-            public int compareTo(SongInc o) {
+            public int compareTo(final SongInc o) {
                 if (o.getInc() - inc > 0) {
                     return 1;
                 }
@@ -50,7 +50,7 @@ public final class Userbase {
             return artist;
         }
 
-        public void setArtist(String artist) {
+        public void setArtist(final String artist) {
             this.artist = artist;
         }
 
@@ -58,7 +58,7 @@ public final class Userbase {
             return songrev;
         }
 
-        public void setSongrev(double songrev) {
+        public void setSongrev(final double songrev) {
             this.songrev = songrev;
         }
 
@@ -66,7 +66,7 @@ public final class Userbase {
             return merchrev;
         }
 
-        public void setMerchrev(double merchrev) {
+        public void setMerchrev(final double merchrev) {
             this.merchrev = merchrev;
         }
 
@@ -74,12 +74,12 @@ public final class Userbase {
             return songIncs;
         }
 
-        public void setSongIncs(LinkedList<SongInc> songIncs) {
+        public void setSongIncs(final LinkedList<SongInc> songIncs) {
             this.songIncs = songIncs;
         }
 
         @Override
-        public int compareTo(ArtistData o) {
+        public int compareTo(final ArtistData o) {
             if ((o.getSongrev() + o.getMerchrev()) - (merchrev + songrev) > 0) {
                 return 1;
             }
@@ -95,6 +95,13 @@ public final class Userbase {
     private Userbase() {
     }
 
+    /**
+     * Function that takes an artist and a song and adds to the
+     * artists stats the song so that it can be shown at the end
+     * of the program
+     * @param artist
+     * @param currSong
+     */
     public void addStats(final String artist, final Song currSong) {
         boolean found = false;
         for (int i = 0; i < artistData.size(); i++) {
@@ -128,6 +135,12 @@ public final class Userbase {
         }
     }
 
+    /**
+     * Function that searches for the stats of an artist with
+     * the given name
+     * @param name
+     * @return
+     */
     public int searchStat(final String name) {
         for (int i = 0; i < artistData.size(); i++) {
             if (artistData.get(i).getArtist().equals(name)) {
@@ -138,6 +151,7 @@ public final class Userbase {
         artistData.getLast().setArtist(name);
         return artistData.size() - 1;
     }
+
     /**
      * Function that gets the current usernames of all online
      * users and returns them
@@ -188,7 +202,7 @@ public final class Userbase {
     }
 
     /***
-     * Adds an user to tyje userbase
+     * Adds a user to tyje userbase
      * @param user
      */
     public void addUser(final UserInput user) {
@@ -239,7 +253,7 @@ public final class Userbase {
      */
     public ResultSwitch deleteUser(final Command command, final User user) {
         ResultSwitch result = new ResultSwitch(command);
-        if (user.isPremium) {
+        if (user.isPremium()) {
             result.setMessage(user.getUsername() + " can't be deleted.");
             return result;
         }
@@ -412,8 +426,14 @@ public final class Userbase {
         return result;
     }
 
-    public void updateArt(Song currSong, User currUser, String artist)
-    {
+    /**
+     * Function that updates the wrapper of an artist with the current user
+     * and the current song
+     * @param currSong
+     * @param currUser
+     * @param artist
+     */
+    public void updateArt(final Song currSong, final User currUser, final String artist) {
         for (int i = 0; i < userbase.size(); i++) {
             if (userbase.get(i).getType() == 1 && userbase.get(i).getUsername().equals(artist)) {
                 ((Artist) userbase.get(i)).updateWrapped(currUser, currSong);
@@ -422,8 +442,14 @@ public final class Userbase {
         }
     }
 
-    public void updateHost(final Episode currEpisode, final User currUser, final String artist)
-    {
+    /**
+     * Function that updates the wrapper of a host with the current user and the
+     * current episode
+     * @param currEpisode
+     * @param currUser
+     * @param artist
+     */
+    public void updateHost(final Episode currEpisode, final User currUser, final String artist) {
         for (int i = 0; i < userbase.size(); i++) {
             if (userbase.get(i).getType() == 2 && userbase.get(i).getUsername().equals(artist)) {
                 ((Host) userbase.get(i)).updateWrapped(currEpisode, currUser);
@@ -432,6 +458,12 @@ public final class Userbase {
         }
     }
 
+    /**
+     * Function that searches and returns the user that has the
+     * username equal to name
+     * @param name
+     * @return
+     */
     public User searchUser(final String name) {
         for (int i = 0; i < userbase.size(); i++) {
             if (userbase.get(i).getUsername().equals(name)) {
@@ -453,7 +485,7 @@ public final class Userbase {
         return artistData;
     }
 
-    public void setArtistData(LinkedList<ArtistData> artistData) {
+    public void setArtistData(final LinkedList<ArtistData> artistData) {
         this.artistData = artistData;
     }
 }

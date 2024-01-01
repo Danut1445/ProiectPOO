@@ -26,7 +26,7 @@ public class AudioFiles {
     }
 }
 
-class Song extends AudioFiles implements Comparable<Song>{
+class Song extends AudioFiles implements Comparable<Song> {
     private String album;
     private ArrayList<String> tags;
     private String lyrics;
@@ -102,7 +102,7 @@ class Song extends AudioFiles implements Comparable<Song>{
     }
 
     @Override
-    public int compareTo(Song o) {
+    public int compareTo(final Song o) {
         if (o.getLikes() == likes) {
             return -(o.getName().compareTo(this.getName()));
         } else {
