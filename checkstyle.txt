@@ -3,9 +3,9 @@ Starting audit...
 [ERROR] /home/student/Coding/ANULII/ProiectPoo/tema/etapa3/./src/main/Main.java:76: Line is longer than 100 characters (found 163). [LineLength]
 [ERROR] /home/student/Coding/ANULII/ProiectPoo/tema/etapa3/./src/main/Player.java:120:5: Method length is 319 lines (max allowed is 150). [MethodLength]
 [ERROR] /home/student/Coding/ANULII/ProiectPoo/tema/etapa3/./src/main/Player.java:512:5: Method length is 156 lines (max allowed is 150). [MethodLength]
-[ERROR] /home/student/Coding/ANULII/ProiectPoo/tema/etapa3/./src/main/User.java:1: File length is 3,164 lines (max allowed is 2,000). [FileLength]
+[ERROR] /home/student/Coding/ANULII/ProiectPoo/tema/etapa3/./src/main/User.java:1: File length is 3,171 lines (max allowed is 2,000). [FileLength]
 [ERROR] /home/student/Coding/ANULII/ProiectPoo/tema/etapa3/./src/main/User.java:6:17: Using the '.*' form of import should be avoided - java.util.*. [AvoidStarImport]
 [ERROR] /home/student/Coding/ANULII/ProiectPoo/tema/etapa3/./src/main/User.java:582:5: Method length is 251 lines (max allowed is 150). [MethodLength]
-[ERROR] /home/student/Coding/ANULII/ProiectPoo/tema/etapa3/./src/main/User.java:3161:50: 'wrapped' hides a field. [HiddenField]
+[ERROR] /home/student/Coding/ANULII/ProiectPoo/tema/etapa3/./src/main/User.java:3168:50: 'wrapped' hides a field. [HiddenField]
 Audit done.
 Checkstyle ends with 8 errors.

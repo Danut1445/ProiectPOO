@@ -2048,7 +2048,7 @@ public class User implements Visitable, NotifObserv {
             Playlist playlist = new Playlist();
             playlist.setUser(this.getUsername());
             playlist.setPrivacy("public");
-            if (!player.getType().equals("playlist")) {
+            if (player.getType().equals("podcast") || player.getType().equals("nothing")) {
                 result.setMessage("No new recommendations were found");
                 return result;
             }
@@ -2069,9 +2069,12 @@ public class User implements Visitable, NotifObserv {
             int size = art.getWrappedartist().getUserListens().size();
             for (int i = 0; i < nr && i < size; i++) {
                 String usrnm = art.getWrappedartist().getUserListens().get(i).getUser();
+                if (usrnm.equals(username)) {
+                    continue;
+                }
                 User user = null;
                 for (int j = 0; j < ub.getUserbase().size(); j++) {
-                    if (ub.getUserbase().get(j).getUsername().equals(name)) {
+                    if (ub.getUserbase().get(j).getUsername().equals(usrnm)) {
                         user = ub.getUserbase().get(j);
                         break;
                     }
@@ -2104,6 +2107,10 @@ public class User implements Visitable, NotifObserv {
                 }
             }
             playlist.setName(art.getUsername() + " Fan Club recommendations");
+            if (playlist.getSongs().isEmpty()) {
+                result.setMessage("No new recommendations were found");
+                return result;
+            }
             recPlaylist.addLast(playlist);
             String msg = "The recommendations for user " + username;
             result.setMessage(msg + " have been updated successfully.");
