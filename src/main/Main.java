@@ -112,7 +112,7 @@ public final class Main {
         PrintCurrentPage printCurrentPage = new PrintCurrentPage();
 
         // TODO add your implementation
-        System.out.println("This is the size: " + commands.size());
+//        System.out.println("This is the size: " + commands.size());
 
         for (int i = 0; i < commands.size(); i++) {
             Command currComm = commands.get(i);
