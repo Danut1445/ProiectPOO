@@ -1,5 +1,11 @@
 package main;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.util.Collections;
+
 public final class Player {
     private int lasttimestamp;
     private int timeremaining;
@@ -737,6 +743,7 @@ public final class Player {
                             int list = listSg.getSongs().get(i).getListen();
                             inc += (adrev / listSg.getTotalls()) * list;
                             artd.getSongIncs().get(k).setInc(inc);
+                            //System.out.println("User " + currUser.getUsername() + " paid " + artd.getArtist() + " " + (adrev / listSg.getTotalls()) * list + " money for song " + crSg.getName());
                             break;
                         }
                     }
@@ -747,6 +754,10 @@ public final class Player {
                 }
             }
         }
+
+        //System.out.println("Ad break for user " + currUser.getUsername() + " paid " + adrev + " in total.");
+        Library.getInstance().getList().addLast(listSg.getSongs());
+
         listSg.reserList();
         nextAd = 2;
         if (timeremaining < passedtime) {

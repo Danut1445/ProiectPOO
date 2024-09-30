@@ -77,14 +77,15 @@ public final class Main {
         ArrayNode outputs = objectMapper.createArrayNode();
         LinkedList<Object> results = new LinkedList<Object>();
 
-//        System.out.println(filePathInput);
-//        if (!filePathInput.equals("test15_etapa3_complex.json")) {
-//            return;
-//        }
+        System.out.println(filePathInput);
+        if (!filePathInput.equals("test06_etapa3_monetization_all.json")) {
+            return;
+        }
 
         Library librarySongs = Library.getInstance();
         librarySongs.setSongs(new LinkedList<Song>());
         library.getSongs().forEach((element) -> librarySongs.addSong(element));
+        librarySongs.setList(new LinkedList<>());
 
         Userbase userbase = Userbase.getInstance();
         userbase.setUserbase(new LinkedList<User>());
@@ -408,5 +409,7 @@ public final class Main {
 
         ObjectWriter objectWriter = objectMapper.writerWithDefaultPrettyPrinter();
         objectWriter.writeValue(new File(filePathOutput), results);
+
+        objectWriter.writeValue(new File("t"), Library.getInstance().getList());
     }
 }

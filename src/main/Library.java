@@ -7,6 +7,9 @@ import java.util.LinkedList;
 public final class Library {
     private static final Library INSTANCE = new Library();
     private LinkedList<Song> songs = new LinkedList<Song>();
+
+    LinkedList<LinkedList<User.Wrapped.SongListen>> list = new LinkedList<>();
+
     private Library() {
     }
 
@@ -54,5 +57,13 @@ public final class Library {
         }
         resultTop5.setResult(top5);
         return resultTop5;
+    }
+
+    public LinkedList<LinkedList<User.Wrapped.SongListen>> getList() {
+        return list;
+    }
+
+    public void setList(LinkedList<LinkedList<User.Wrapped.SongListen>> list) {
+        this.list = list;
     }
 }

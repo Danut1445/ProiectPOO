@@ -1,8 +1,11 @@
 package main;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import fileio.input.UserInput;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.util.*;
 import java.util.stream.IntStream;
 
@@ -1803,6 +1806,9 @@ public class User implements Visitable, NotifObserv {
                 }
             }
         }
+
+        Library.getInstance().getList().addLast(premium.getSongs());
+
         isPremium = false;
         result.setMessage(username + " cancelled the subscription successfully.");
         return result;

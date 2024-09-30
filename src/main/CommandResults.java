@@ -687,6 +687,15 @@ class ResultEnd {
             }
             result.put(currArt.getArtist(), finalRes);
         }
+        for (User u : userbase.getUserbase()) {
+            if (u.getType() != 0)
+                continue;
+            User.Wrapped wrapped = u.getWrapped();
+            for (User.Wrapped.SongListen sg : wrapped.getTopSong()) {
+                if (sg.getSong().getAlbum().equals("Greatest Hits") && sg.getSong().getArtist().equals("Bruce Springsteen"))
+                    System.out.println(sg.getSong().getName() + " " + sg.getListen() + " " + u.getUsername());
+            }
+        }
     }
 
     public String getCommand() {
